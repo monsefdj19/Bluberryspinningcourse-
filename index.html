@@ -155,14 +155,20 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
   .checklist{grid-template-columns:1fr!important;gap:12px!important}.checklist li{font-size:15px!important;line-height:1.4!important;padding-left:34px!important}
   .source{padding:18px 0!important}.source b{font-size:15px!important;line-height:1.3!important}.source a,.source p{font-size:13px!important;line-height:1.45!important;overflow-wrap:anywhere!important}
 }
+/* First-visit guidance and tighter live operation */
+.quick-start{width:210mm;margin:0 auto 22px;padding:24px 26px;background:#07101d;color:#f7fbff;border:1px solid #20e8ff55;box-shadow:0 22px 70px #0007}.quick-start-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:18px}.quick-start-head small{display:block;color:#20e8ff;font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}.quick-start h2{font-size:28px;letter-spacing:-.035em}.quick-start-head p{max-width:390px;color:#aab8c4;font-size:13px;line-height:1.45}.quick-start-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.quick-step{border:1px solid #ffffff20;background:#0c1622;border-radius:13px;padding:15px}.quick-step b{display:block;color:#20e8ff;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}.quick-step span{font-size:13px;line-height:1.4;color:#d8e2e9}.quick-start-actions{display:flex;gap:10px;margin-top:15px}.quick-action{min-height:42px;border-radius:10px;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font:inherit;font-size:13px;font-weight:850;cursor:pointer}.quick-action.primary{background:#20e8ff;color:#05070a;border:1px solid #20e8ff}.quick-action.secondary{background:transparent;color:white;border:1px solid #ffffff38}
+.alternative-details>summary,.source-details>summary{display:none}.source-details{margin-top:4mm}.source-details>summary{cursor:pointer;list-style:none;border:1px solid #b8cae8;background:#edf5ff;padding:4mm 5mm;color:#061944;font-size:10pt;font-weight:850}.source-details>summary::-webkit-details-marker{display:none}.source-details>summary:after{content:'+';float:right;color:#075cff}.source-details[open]>summary:after{content:'−'}.spotify-preview-note{margin:-13px 3px 18px;color:#9ba9b5;font-size:11px;line-height:1.4}.spotify-preview-note b{color:#f0f5f8}.live-tip{max-width:760px}.live-grid{padding-top:18px}.live-title{font-size:clamp(40px,5.6vw,72px);margin:12px 0}.live-cue{font-size:clamp(17px,1.8vw,24px);min-height:0}.live-prescription{margin:12px 0 2px}.live-metrics{margin:14px 0}.live-clock{margin-top:10px}.live-time b{font-size:clamp(42px,6vw,64px)}.live-bar{margin:8px 0 14px}.spotify-player-card{margin-top:18px}.quick-action:focus-visible,.alternative-details>summary:focus-visible,.source-details>summary:focus-visible,.live-control:focus-visible,.live-reset:focus-visible,.live-close:focus-visible{outline:3px solid #f7ff61;outline-offset:3px}
+@media(max-width:760px){.quick-start{width:auto;margin:0 0 14px;padding:21px 18px}.quick-start-head{display:block}.quick-start-head p{margin-top:9px}.quick-start-steps{grid-template-columns:1fr}.quick-start-actions{display:grid;grid-template-columns:1fr 1fr}.quick-action{padding:0 10px}.alternative-details>summary{display:flex;align-items:center;justify-content:space-between;cursor:pointer;list-style:none;border:1px solid #b8cae8;border-radius:12px;background:#fff;padding:14px 15px;color:#061944;font-size:14px;font-weight:850;margin-bottom:12px}.alternative-details>summary::-webkit-details-marker{display:none}.alternative-details>summary:after{content:'+';color:#075cff;font-size:18px}.alternative-details[open]>summary:after{content:'−'}.source-details{margin-top:18px}.source-details>summary{display:block;border-radius:12px;padding:14px 15px;font-size:14px}.spotify-preview-note{margin:-11px 2px 16px}.live-grid{padding-top:18px}.live-title{font-size:48px;margin:14px 0}.live-cue{font-size:19px}.live-clock{margin-top:16px}.live-time b{font-size:50px}.live-bar{margin:10px 0 14px}}
+@media(min-width:761px) and (max-height:720px){.live-grid{padding-top:8px}.live-title{font-size:54px;margin:7px 0}.live-cue{font-size:16px;line-height:1.35}.live-prescription{margin:8px 0 0}.prescription-item{padding:9px 11px}.live-metrics{margin:8px 0}.live-metric{padding:8px 12px}.live-metric b{font-size:34px}.live-clock{margin-top:5px;padding:7px 12px}.live-time b{font-size:44px}.live-bar{margin:5px 0 8px}.live-controls{gap:8px}.live-control{min-height:42px}}
+@media print{.quick-start{display:none!important}.alternative-details>summary,.source-details>summary{display:none!important}.alternative-details:not([open])>.alternative-body{display:block!important}.source-details:not([open])>.sources{display:flex!important}}
 </style>
 </head>
 <body>
-<nav class="progress-dock" aria-label="Course progress">
-  <div class="progress-brand"><b>First ride</b><small>Live course mode</small></div>
+<nav class="progress-dock" aria-label="Preparation progress">
+  <div class="progress-brand"><b>First ride</b><small>Preparation progress</small></div>
   <div class="progress-list" id="progressList"></div>
   <button class="live-launch" id="openLive" type="button">▶ Start live ride</button>
-  <button class="reset-progress" id="resetProgress" type="button" title="Reset course progress" aria-label="Reset course progress">↻</button>
+  <button class="reset-progress" id="resetProgress" type="button" title="Reset preparation progress" aria-label="Reset preparation progress">↻</button>
 </nav>
 <section class="page cover">
   <div class="cover-ring r1"></div><div class="cover-ring r2"></div>
@@ -170,7 +176,7 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
     <div class="eyebrow">45-minute indoor cycling · instructor guide</div>
     <h1 class="display">Spinning<br><em>course.</em></h1>
     <p class="lede">A bright, rehearsal-ready class plan with precise music timing, practical coaching language, and safety-first progression.</p>
-    <div class="cover-meta"><span class="kicker"><i class="dot"></i> Focus · strength · freedom</span><span class="kicker">14 tracks · 44:56</span><a class="kicker" href="First-Ride-Instructor-Guide.pdf" download>Download PDF ↓</a></div>
+    <div class="cover-meta"><span class="kicker"><i class="dot"></i> Beginner-friendly · safety first</span><span class="kicker">14 tracks · 44:56</span><a class="kicker" href="First-Ride-Instructor-Guide.pdf" download>Download PDF ↓</a></div>
   </div>
   <svg class="cover-art" viewBox="0 0 600 600" aria-label="Abstract indoor cyclist illustration">
     <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#d8ff42"/><stop offset="1" stop-color="#ff6b4a"/></linearGradient></defs>
@@ -182,7 +188,13 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
   <div class="footer">Prepared as a rehearsal-ready guide. Cover photograph: U.S. Air Force / Public Domain. Not medical advice.</div><div class="page-no">01</div>
 </section>
 
-<section class="page" data-step="0" data-title="Foundations">
+<section class="quick-start" aria-labelledby="quickStartTitle">
+  <div class="quick-start-head"><div><small>First time here?</small><h2 id="quickStartTitle">Prepare, rehearse, then teach.</h2></div><p>The guide builds confidence before class. The live console is the simple, timed view to use when riders are in the room.</p></div>
+  <div class="quick-start-steps"><div class="quick-step"><b>1 · Prepare</b><span>Review Foundations and complete the pre-class checklist.</span></div><div class="quick-step"><b>2 · Rehearse</b><span>Practice Today’s Ride with all 14 tracks in the planned order.</span></div><div class="quick-step"><b>3 · Teach</b><span>Open Live Ride for the timer, cues, transitions, and exercise queue.</span></div></div>
+  <div class="quick-start-actions"><a class="quick-action primary" href="#foundations">Start preparing →</a><button class="quick-action secondary" id="openLiveQuick" type="button">Open live console</button></div>
+</section>
+
+<section class="page" id="foundations" data-step="0" data-title="Foundations">
   <svg class="bike-mini" viewBox="0 0 100 100"><circle cx="25" cy="70" r="19" fill="none" stroke="#08151c" stroke-width="5"/><circle cx="76" cy="70" r="19" fill="none" stroke="#08151c" stroke-width="5"/><path d="M25 70l19-31 14 31H36l18-20 22 20" fill="none" stroke="#08151c" stroke-width="5"/></svg>
   <div class="eyebrow">01 · Foundations</div><h2 class="section-title">Build confidence before intensity.</h2>
   <p class="intro">For a first course, the goal is not to exhaust the room. It is to create a ride that feels clear, safe, musical, and achievable. Every standing section is optional, and the instructor should coach effort—not force a fixed resistance.</p>
@@ -199,9 +211,9 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
   <div class="footer">RPE = rating of perceived exertion on a 0–10 scale.</div><div class="page-no">02</div>
 </section>
 
-<section class="page profile-a" data-step="1" data-title="Rhythm ride">
-  <div class="eyebrow">02 · Profile A</div><h2 class="section-title">The rhythm ride.</h2>
-  <p class="intro">A friendly first-class arc: three tracks to warm up, alternating cadence and climbing work, one controlled final build, then a calm finish. Standing is always optional.</p>
+<section class="page profile-a" id="todaysRide" data-step="1" data-title="Today’s ride">
+  <div class="eyebrow">02 · Today’s first ride · used by the live console</div><h2 class="section-title">The rhythm ride.</h2>
+  <p class="intro">This is the class used by the live console: three tracks to warm up, alternating cadence and climbing work, one controlled final build, then a calm finish. Standing is always optional.</p>
   <div class="timeline">
     <div class="ride-row"><div class="time">0:00–2:46</div><div class="exercise"><b>Easy seated warm-up</b><small>Posture, brake, resistance control</small><div class="bar gray" style="width:32%"></div></div><div class="rpm">70–80 RPM</div><div class="effort">RPE 2–3</div></div>
     <div class="ride-row"><div class="time">2:46–5:38</div><div class="exercise"><b>Progressive warm-up</b><small>Add resistance gradually</small><div class="bar gray" style="width:39%"></div></div><div class="rpm">75–85</div><div class="effort">RPE 3–4</div></div>
@@ -224,7 +236,7 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
 
 <section class="page" data-step="2" data-title="Music map">
   <div class="play-head"><div><div class="eyebrow">03 · Music map</div><h2 class="section-title" style="margin-bottom:0">Spotify sequence.</h2></div><div class="total"><b>44:56</b><span>14 verified tracks</span></div></div>
-  <p class="intro">Tap any track title in the PDF to open it in Spotify. Keep this exact order, turn Shuffle off, and rehearse every transition before teaching.</p>
+  <p class="intro">Tap any track here—or in the printable PDF—to open it in Spotify. Keep this exact order, turn Shuffle off, and rehearse every transition before teaching.</p>
   <div class="tracks">
     <a class="track" href="https://open.spotify.com/track/7apaVSk8pGOQxqXiNKUIQM"><i class="track-num">1</i><span><b>Good to Go</b><small>LÒNIS, Daphne Willis · warm-up</small></span><em class="track-time">2:46</em></a>
     <a class="track" href="https://open.spotify.com/track/2hZTeA6c94dBoiuGcBv3R0"><i class="track-num">2</i><span><b>I Feel Good</b><small>Pitbull, Anthony Watts, DJ White Shadow</small></span><em class="track-time">2:52</em></a>
@@ -242,12 +254,13 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
     <a class="track" href="https://open.spotify.com/track/3PSUR87uYTJInyAyw1AzGi"><i class="track-num">14</i><span><b>Take Me To The Ocean</b><small>The Movement · cooldown</small></span><em class="track-time">4:30</em></a>
   </div>
   <div class="spotify-note"><b>Spotify setup:</b> Shuffle OFF · Automix OFF · Crossfade 0–2 seconds. Download the tracks before class and keep a backup device/cable. Availability and clean/explicit versions can vary by country; confirm every track in the studio account.</div>
-  <div class="footer">A publishable Spotify playlist requires the instructor to sign in. These verified links are ready to add in order.</div><div class="page-no">04</div>
+  <div class="footer">The live console includes a Spotify player for each exercise. A complete ordered playlist can be added later without changing the ride structure.</div><div class="page-no">04</div>
 </section>
 
-<section class="page profile-b" data-step="3" data-title="Rolling hills">
-  <div class="eyebrow">04 · Profile B</div><h2 class="section-title">Rolling hills + intervals.</h2>
-  <p class="intro">A second structure for later classes. It feels more athletic but keeps the same beginner-safe principles: measured peaks, real recoveries, and a full five-minute cooldown.</p>
+<section class="page profile-b" data-step="3" data-title="Alternative ride">
+  <div class="eyebrow">04 · Alternative ride for later</div><h2 class="section-title">Rolling hills + intervals.</h2>
+  <p class="intro">Save this structure for a later class. It is not connected to the current live console and needs a different playlist, but it keeps the same beginner-safe principles: measured peaks, real recoveries, and a full five-minute cooldown.</p>
+  <details class="alternative-details" open><summary>View the alternative 45-minute class</summary><div class="alternative-body">
   <div class="block-list">
     <div class="block"><strong>0:00–6:00</strong><span>6 min</span><div class="move">Seated warm-up · posture and gradual resistance</div><span>70–85 RPM</span><div class="phase warm"></div></div>
     <div class="block"><strong>6:00–10:00</strong><span>4 min</span><div class="move">Cadence prep · 3 × 30 sec accelerations</div><span>85–95</span><div class="phase"></div></div>
@@ -267,7 +280,8 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
     <div class="card"><h3>3 · Work</h3><p>Heavy, driving tracks for hills.</p></div><div class="card"><h3>4 · Release</h3><p>Brighter, lighter recovery tracks.</p></div>
     <div class="card accent"><h3>5 · Peak</h3><p>Fast intervals, then one emotional finale.</p></div><div class="card"><h3>6 · Land</h3><p>Calm final track, no abrupt stop.</p></div>
   </div>
-  <div class="footer">Do not reuse Profile A’s playlist blindly: choose songs whose lengths match these ten blocks.</div><div class="page-no">05</div>
+  </div></details>
+  <div class="footer">Do not reuse Today’s Ride playlist: choose songs whose lengths match these alternative blocks.</div><div class="page-no">05</div>
 </section>
 
 <section class="page" data-step="4" data-title="Coaching cues">
@@ -296,24 +310,24 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
 
 <section class="page" data-step="5" data-title="Research">
   <div class="eyebrow">06 · Research notes</div><h2 class="section-title">Sources + responsible use.</h2>
-  <div class="sources">
+  <details class="source-details" open><summary>View 6 research and safety references</summary><div class="sources">
     <div class="source"><b>American Heart Association — Warm Up, Cool Down</b><a href="https://www.heart.org/en/healthy-living/exercise-and-physical-activity/fitness-basics/warm-up-cool-down">heart.org/…/warm-up-cool-down</a><p>Supports gradual 5–10 minute warm-ups and cooldowns rather than stopping suddenly.</p></div>
     <div class="source"><b>Centers for Disease Control and Prevention — Measuring Physical Activity Intensity</b><a href="https://www.cdc.gov/physical-activity-basics/measuring/index.html">cdc.gov/physical-activity-basics/measuring</a><p>Defines the 0–10 relative intensity scale and talk test used in this guide.</p></div>
     <div class="source"><b>Indoor Cycling Association — Why Cadence Matters</b><a href="https://indoorcyclingassociation.com/how-to-develop-a-faster-cadence-part-1-why-cadence-matters/">indoorcyclingassociation.com/…/why-cadence-matters</a><p>Discusses cadence/resistance interaction, stable form, progressive cadence work, and an approximate 110 RPM ceiling.</p></div>
     <div class="source"><b>Terry et al. (2020) — Effects of music in exercise and sport</b><a href="https://doi.org/10.1037/bul0000216">doi.org/10.1037/bul0000216</a><p>Meta-analysis of 139 studies; music was associated with improved affect, performance, perceived exertion, and efficiency.</p></div>
     <div class="source"><b>Masuda et al. (2023) — Exertional rhabdomyolysis after indoor spinning</b><a href="https://pubmed.ncbi.nlm.nih.gov/35254210/">pubmed.ncbi.nlm.nih.gov/35254210</a><p>Systematic review of 97 reported patients; many were healthy women attending their first spinning session.</p></div>
     <div class="source"><b>Chavarrias et al. (2019) — Health Benefits of Indoor Cycling</b><a href="https://pubmed.ncbi.nlm.nih.gov/31443139/">pubmed.ncbi.nlm.nih.gov/31443139</a><p>Systematic review of indoor cycling’s health and fitness effects.</p></div>
-  </div>
+  </div></details>
   <div class="rule"></div>
   <p class="smallprint"><b>Important:</b> This document is an educational planning aid, not medical guidance and not a replacement for a recognized indoor-cycling instructor certification, CPR/AED training, the studio’s emergency procedures, or participant screening. The instructor remains responsible for music licensing, local facility policy, bike setup, room conditions, and adapting the class to the people present.</p>
-  <div class="card blue" style="margin-top:7mm"><h3>Next rehearsal</h3><p>Print pages 3–4, place them on the instructor console, and run the full 44:56 sequence twice: once for movement timing, once for cue timing and microphone practice.</p></div>
+  <div class="card blue" style="margin-top:7mm"><h3>Next rehearsal</h3><p>Download the PDF and print pages 3–4. Place them on the instructor console, then run the full 44:56 sequence twice: once for movement timing and once for cue timing and microphone practice.</p></div>
   <div class="footer">First ride · 45-minute spinning course guide</div><div class="page-no">07</div>
 </section>
 
-<div class="live-overlay" id="liveOverlay" hidden aria-label="Live instructor console">
+<div class="live-overlay" id="liveOverlay" hidden role="dialog" aria-modal="true" aria-label="Live instructor console">
   <div class="live-shell">
     <header class="live-top">
-      <div class="live-brand"><b>First Ride Live</b><small>Music plays in Spotify · this screen keeps the class on time</small></div>
+      <div class="live-brand"><b>First Ride Live</b><small>Use Spotify for full tracks · this screen keeps each exercise on time</small></div>
       <div class="live-top-actions"><button class="live-reset" id="liveReset" type="button" aria-label="Reset live session"><span aria-hidden="true">↻</span> Reset session</button><button class="live-close" id="closeLive" type="button" aria-label="Close live mode">×</button></div>
     </header>
     <div class="live-grid">
@@ -323,7 +337,6 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
         <p class="live-cue" id="liveCue">Posture, brake, and resistance control. Let the room settle into the rhythm.</p>
         <div class="live-prescription" aria-label="Current section instructions"><div class="prescription-item"><small>Position</small><b id="livePosition">Seated</b></div><div class="prescription-item"><small>Resistance</small><b id="liveResistance">Light and supportive</b></div><div class="prescription-item"><small>Pattern</small><b id="livePattern">Smooth spin · check bike setup</b></div></div>
         <div class="live-metrics"><div class="live-metric"><b id="liveRpm">70–80</b><small>RPM</small></div><div class="live-metric"><b id="liveRpe">2–3</b><small>RPE</small></div></div>
-        <section class="spotify-player-card" id="spotifyPlayerCard" aria-label="Spotify player for the current exercise"><div class="spotify-player-head"><b><i class="spotify-live-dot" aria-hidden="true"></i>Spotify player</b><small id="spotifyPlayerState" aria-live="polite">Loading player…</small></div><div class="spotify-embed-shell" id="spotifyEmbed"><div class="spotify-embed-skeleton"><svg class="spotify-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#07120a"/><path d="M9 12.1c4.8-1.4 10.7-1 15 1.3M10.1 16.5c3.9-1.1 8.8-.7 12.5 1.2M11.2 20.7c3.2-.8 7-.5 10 1" fill="none" stroke="#1ed760" stroke-width="2.2" stroke-linecap="round"/></svg><span>Preparing the current track…</span></div></div><div class="spotify-fallback-meta">Current track: <b id="liveTrack">Good to Go</b> · <span id="liveArtist">LÒNIS, Daphne Willis</span>. If the player is unavailable, use Open in Spotify below.</div></section>
         <div class="live-clock"><div class="live-time"><b id="elapsedTime">00:00</b><span>elapsed</span></div><div class="live-remaining"><b id="remainingTime">02:46</b><span>until next section</span></div></div>
         <div class="live-bar" aria-label="Current section progress"><i id="liveBar"></i></div>
         <div class="live-controls">
@@ -331,6 +344,8 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
           <div class="live-inline-nav"><button class="live-control" id="livePrev" type="button">← Previous</button><button class="live-control" id="liveNext" type="button">Next →</button></div>
           <a class="live-control spotify" id="liveSpotify" href="https://open.spotify.com/track/7apaVSk8pGOQxqXiNKUIQM" target="_blank" rel="noopener" aria-label="Open current song in Spotify"><svg class="spotify-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#07120a"/><path d="M9 12.1c4.8-1.4 10.7-1 15 1.3M10.1 16.5c3.9-1.1 8.8-.7 12.5 1.2M11.2 20.7c3.2-.8 7-.5 10 1" fill="none" stroke="#1ed760" stroke-width="2.2" stroke-linecap="round"/></svg><span>Open in Spotify</span></a>
         </div>
+        <section class="spotify-player-card" id="spotifyPlayerCard" aria-label="Spotify preview for the current exercise"><div class="spotify-player-head"><b><i class="spotify-live-dot" aria-hidden="true"></i>Spotify preview</b><small id="spotifyPlayerState" aria-live="polite">Loading preview…</small></div><div class="spotify-embed-shell" id="spotifyEmbed"><div class="spotify-embed-skeleton"><svg class="spotify-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#07120a"/><path d="M9 12.1c4.8-1.4 10.7-1 15 1.3M10.1 16.5c3.9-1.1 8.8-.7 12.5 1.2M11.2 20.7c3.2-.8 7-.5 10 1" fill="none" stroke="#1ed760" stroke-width="2.2" stroke-linecap="round"/></svg><span>Preparing Spotify preview…</span></div></div><div class="spotify-fallback-meta">Current track: <b id="liveTrack">Good to Go</b> · <span id="liveArtist">LÒNIS, Daphne Willis</span>. Playback availability depends on Spotify; use Open in Spotify above for the complete track.</div></section>
+        <p class="spotify-preview-note"><b>Preview only:</b> Spotify may stop after 30 seconds. The class timer continues; use <b>Open in Spotify</b> for the complete song.</p>
       </main>
       <aside class="live-side">
         <div class="next-label">Up next</div>
@@ -339,7 +354,7 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
       </aside>
     </div>
 
-    <p class="live-tip">Tap Play in the Spotify player, then use Start, Pause, Previous, and Next here. The current per-exercise tracks remain available through Open in Spotify; a complete playlist can be connected later without changing the ride structure.</p>
+    <p class="live-tip">For the most reliable class: open the complete song in Spotify, return here, then start the timer. The timer and coaching plan remain available even if Spotify or the network fails.</p>
   </div>
 </div>
 
@@ -349,6 +364,14 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
   const sections=[...document.querySelectorAll('.page[data-step]')];
   const list=document.getElementById('progressList');
   const reset=document.getElementById('resetProgress');
+  const alternative=document.querySelector('.alternative-details');
+  const sourceDetails=document.querySelector('.source-details');
+  const compactDetails=matchMedia('(max-width:760px)');
+  function syncDetails(event){const mobile=event.matches;if(alternative)alternative.toggleAttribute('open',!mobile);if(sourceDetails)sourceDetails.toggleAttribute('open',!mobile)}
+  syncDetails(compactDetails);compactDetails.addEventListener('change',syncDetails);
+  let printDetailsState=null;
+  addEventListener('beforeprint',()=>{printDetailsState={alternative:alternative?.open,sources:sourceDetails?.open};if(alternative)alternative.open=true;if(sourceDetails)sourceDetails.open=true});
+  addEventListener('afterprint',()=>{if(!printDetailsState)return;if(alternative)alternative.open=printDetailsState.alternative;if(sourceDetails)sourceDetails.open=printDetailsState.sources;printDetailsState=null});
   let current=Number.parseInt(localStorage.getItem(storageKey)??'-1',10);
   if(!Number.isFinite(current)||current>=sections.length) current=-1;
 
@@ -415,10 +438,10 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
     {title:'Take Me To The Ocean',artist:'The Movement',seconds:270,phase:'Cooldown',exercise:'Cooldown',cue:'Reduce cadence and resistance gradually. Let breathing settle fully before riders stop and dismount.',position:'Seated · off-bike stretch after',resistance:'Light and decreasing · never zero',pattern:'Reduce each minute · breathe · finish easy',rpm:'60–75',rpe:'2–3',url:'https://open.spotify.com/track/3PSUR87uYTJInyAyw1AzGi'}
   ];
   const $=id=>document.getElementById(id);
-  const overlay=$('liveOverlay'),open=$('openLive'),close=$('closeLive'),toggle=$('liveToggle'),toggleIcon=$('liveToggleIcon'),toggleLabel=$('liveToggleLabel'),prev=$('livePrev'),next=$('liveNext'),queue=$('liveQueue'),liveReset=$('liveReset'),spotifyState=$('spotifyPlayerState'),spotifyCard=$('spotifyPlayerCard');
+  const overlay=$('liveOverlay'),open=$('openLive'),openQuick=$('openLiveQuick'),close=$('closeLive'),toggle=$('liveToggle'),toggleIcon=$('liveToggleIcon'),toggleLabel=$('liveToggleLabel'),prev=$('livePrev'),next=$('liveNext'),queue=$('liveQueue'),liveReset=$('liveReset'),spotifyState=$('spotifyPlayerState'),spotifyCard=$('spotifyPlayerCard');
   const liveKey='firstRideLiveV4';
   let saved={};try{saved=JSON.parse(localStorage.getItem(liveKey)||'{}')}catch(e){}
-  let index=Math.min(Math.max(Number(saved.index)||0,0),ride.length-1),offset=Math.min(Math.max(Number(saved.offset)||0,0),ride[index].seconds-1),running=false,lastTick=performance.now(),lastSecond=-1,audioCtx,wakeLock,spotifyController=null,spotifyLoadedUri='',spotifyIgnorePauseUntil=0,spotifyPreviewComplete=false;
+  let index=Math.min(Math.max(Number(saved.index)||0,0),ride.length-1),offset=Math.min(Math.max(Number(saved.offset)||0,0),ride[index].seconds-1),running=false,lastTick=performance.now(),lastSecond=-1,audioCtx,wakeLock,spotifyController=null,spotifyLoadedUri='',spotifyIgnorePauseUntil=0,spotifyIgnorePlayUntil=0,spotifyPreviewComplete=false,returnFocus=null;
   const totalSeconds=ride.reduce((a,t)=>a+t.seconds,0),before=i=>ride.slice(0,i).reduce((a,t)=>a+t.seconds,0);
   const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
   const save=()=>localStorage.setItem(liveKey,JSON.stringify({index,offset}));
@@ -429,7 +452,7 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
   function loadSpotifyForCurrent(autoplay=false){
     if(!spotifyController)return;
     const uri=trackUri(ride[index]),changed=uri!==spotifyLoadedUri;
-    if(changed){spotifyLoadedUri=uri;spotifyPreviewComplete=false;spotifyState.textContent='Loading current track…';spotifyController.loadEntity(uri)}
+    if(changed){spotifyLoadedUri=uri;spotifyPreviewComplete=false;spotifyState.textContent='Loading preview…';spotifyController.loadEntity(uri)}
     if(autoplay&&!spotifyPreviewComplete){spotifyIgnorePauseUntil=Date.now()+1800;setTimeout(()=>{try{spotifyController.play()}catch(e){}},changed?260:0)}
   }
   function handleSpotifyPlayback(event){
@@ -439,13 +462,14 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
     if(isPreview&&ended)spotifyPreviewComplete=true;
     const timing=duration?`${fmt(position)} / ${fmt(duration)}`:fmt(position);
     spotifyState.textContent=data.isBuffering?'Buffering…':isPreview&&ended?'Preview complete · timer continues':data.isPaused?`Paused · ${timing}`:isPreview?`Preview playing · ${timing}`:`Playing · ${timing}`;
+    if(!data.isPaused&&(overlay.hidden||Date.now()<spotifyIgnorePlayUntil)){try{spotifyController?.pause()}catch(e){}return}
     if(!data.isPaused){running=true;lastTick=performance.now();requestWakeLock()}
     else if(position>0&&!ended&&Date.now()>spotifyIgnorePauseUntil){running=false;lastTick=performance.now();releaseWakeLock()}
     render();
   }
   window.onSpotifyIframeApiReady=IFrameAPI=>{
     IFrameAPI.createController($('spotifyEmbed'),{uri:trackUri(ride[index]),width:'100%',height:152},controller=>{
-      const readyLabel=()=>matchMedia('(max-width:340px)').matches?'Use Open in Spotify below':'Ready · tap Play';
+      const readyLabel=()=>matchMedia('(max-width:340px)').matches?'Use Open in Spotify above':'Preview ready · tap Play';
       spotifyController=controller;spotifyLoadedUri=trackUri(ride[index]);spotifyCard.classList.add('embed-ready');spotifyState.textContent=readyLabel();
       controller.addListener('ready',()=>{spotifyCard.classList.add('embed-ready');spotifyState.textContent=readyLabel()});
       controller.addListener('playback_started',()=>{spotifyState.textContent='Starting playback…'});
@@ -468,14 +492,17 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
   }
   async function requestWakeLock(){if(!('wakeLock'in navigator)||!running)return;try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}}
   async function releaseWakeLock(){try{if(wakeLock)await wakeLock.release()}catch(e){}wakeLock=null}
-  function setRunning(value,syncSpotify=true){running=value;lastTick=performance.now();if(running)requestWakeLock();else releaseWakeLock();if(syncSpotify&&spotifyController){try{running&&!spotifyPreviewComplete?spotifyController.play():!running&&spotifyController.pause()}catch(e){}}render()}
+  function setRunning(value,syncSpotify=true){running=value;lastTick=performance.now();if(running){spotifyIgnorePlayUntil=0;requestWakeLock()}else{spotifyIgnorePlayUntil=Date.now()+1200;releaseWakeLock()}if(syncSpotify&&spotifyController){try{running&&!spotifyPreviewComplete?spotifyController.play():!running&&spotifyController.pause()}catch(e){}}render()}
   function jump(i){const resume=running;index=Math.min(Math.max(i,0),ride.length-1);offset=0;lastSecond=-1;save();render();loadSpotifyForCurrent(resume)}
   function advance(auto=false){if(index<ride.length-1){const resume=running;index++;offset=0;lastSecond=-1;if(auto)transitionSignal();save();render();loadSpotifyForCurrent(resume)}else{offset=ride[index].seconds;setRunning(false);transitionSignal();render()}}
   function tick(now){if(running){const delta=Math.max(0,(now-lastTick)/1000);lastTick=now;offset+=delta;let transitioned=false;while(index<ride.length-1&&offset>=ride[index].seconds){offset-=ride[index].seconds;index++;lastSecond=-1;transitioned=true}if(index===ride.length-1&&offset>=ride[index].seconds){offset=ride[index].seconds;running=false;releaseWakeLock();transitioned=true}const remaining=ride[index].seconds-offset,sec=Math.ceil(remaining);if(sec!==lastSecond){lastSecond=sec;if(sec===10)tone(520,.1);if(sec>0&&sec<=3)tone(620+(3-sec)*90,.08);save()}if(transitioned){transitionSignal();loadSpotifyForCurrent(running)}render()}requestAnimationFrame(tick)}
-  open.addEventListener('click',()=>{overlay.hidden=false;document.body.classList.add('live-open');render()});close.addEventListener('click',()=>{overlay.hidden=true;document.body.classList.remove('live-open');setRunning(false)});
+  function openLiveMode(event){returnFocus=event?.currentTarget||document.activeElement;overlay.hidden=false;document.body.classList.add('live-open');render();requestAnimationFrame(()=>toggle.focus())}
+  function closeLiveMode(){overlay.hidden=true;document.body.classList.remove('live-open');setRunning(false);if(returnFocus&&typeof returnFocus.focus==='function')returnFocus.focus()}
+  open.addEventListener('click',openLiveMode);openQuick.addEventListener('click',openLiveMode);close.addEventListener('click',closeLiveMode);
+  overlay.addEventListener('keydown',event=>{if(event.key!=='Tab')return;const focusable=[...overlay.querySelectorAll('button:not([disabled]),a[href],iframe,[tabindex]:not([tabindex="-1"])')].filter(element=>element.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}});
   toggle.addEventListener('click',()=>setRunning(!running));prev.addEventListener('click',()=>{if(offset>8){offset=0;save();if(spotifyController){try{spotifyController.seek(0);if(running)spotifyController.play()}catch(e){}}render()}else jump(index-1)});next.addEventListener('click',()=>advance(false));
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&running)requestWakeLock()});
-  document.addEventListener('keydown',e=>{if(overlay.hidden)return;if(e.code==='Space'){e.preventDefault();setRunning(!running)}if(e.key==='ArrowRight')advance(false);if(e.key==='ArrowLeft')jump(index-1);if(e.key==='Escape')close.click()});
+  document.addEventListener('keydown',e=>{if(overlay.hidden)return;const interactive=e.target.closest?.('button,a,summary,iframe');if(e.code==='Space'&&!interactive){e.preventDefault();setRunning(!running)}if(e.key==='ArrowRight'&&!interactive)advance(false);if(e.key==='ArrowLeft'&&!interactive)jump(index-1);if(e.key==='Escape')close.click()});
   function resetLiveSession(){index=0;offset=0;lastSecond=-1;localStorage.removeItem(liveKey);setRunning(false);queue.scrollTo({top:0,behavior:'smooth'})}
   liveReset.addEventListener('click',resetLiveSession);$('resetProgress').addEventListener('click',resetLiveSession);
   buildQueue();render();requestAnimationFrame(tick);
