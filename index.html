@@ -99,6 +99,52 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
   .live-control{flex:1 1 calc(50% - 7px);justify-content:center;text-align:center;padding:12px 10px}
   .live-side{max-height:none}
   .live-queue{max-height:290px}
+
+  /* The preparation guide becomes a true scrolling mobile document. */
+  .page:not(.cover){height:auto!important;min-height:0!important;overflow:visible!important;padding:38px 22px 42px!important}
+  .page:not(.cover)::before{left:22px!important;right:22px!important;top:22px!important}
+  .page:not(.cover) .footer,.page:not(.cover) .page-no,.section-state,.bike-mini{display:none!important}
+  .page .eyebrow{font-size:10px;line-height:1.35;letter-spacing:.18em;white-space:normal}
+  .section-title{font-size:40px!important;line-height:.96!important;margin:14px 0 20px!important;overflow-wrap:anywhere}
+  .intro{font-size:16px!important;line-height:1.5!important;max-width:none!important;margin-bottom:24px!important}
+  .rule{margin:26px 0!important}
+  .quote{font-size:24px!important;line-height:1.18!important}
+
+  .rpe{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin:20px 0 24px!important}
+  .rpe div{min-height:104px!important;padding:16px!important}
+  .rpe div:last-child{grid-column:1/-1;min-height:86px!important}
+  .grid2{grid-template-columns:1fr!important;gap:12px!important}
+  .card{padding:18px!important;border-radius:14px!important}
+  .card h3{font-size:19px!important}.card p,.card li{font-size:15px!important;line-height:1.48!important}
+
+  .ride-row{display:grid!important;grid-template-columns:76px minmax(0,1fr)!important;gap:7px 14px!important;padding:15px 0!important;align-items:start!important}
+  .ride-row .time{grid-column:1;grid-row:1/3;font-size:13px!important;line-height:1.25!important;padding-top:2px}
+  .ride-row .exercise{grid-column:2;grid-row:1;min-width:0}
+  .ride-row .exercise b{font-size:15px!important;line-height:1.2!important}.ride-row .exercise small{font-size:12px!important;line-height:1.35!important}
+  .ride-row .rpm{grid-column:2;grid-row:2;justify-self:start;font-size:11px!important;color:#415168}
+  .ride-row .effort{grid-column:2;grid-row:2;justify-self:end;font-size:11px!important;color:#08151c}
+  .ride-row .bar{max-width:100%!important}
+  .legend{display:flex!important;flex-wrap:wrap!important;gap:10px 14px!important;margin-top:18px!important}
+
+  .play-head{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:16px!important}
+  .play-head .total{position:static!important;width:100%!important;padding:14px 16px!important;text-align:left!important}
+  .play-head .total b{font-size:28px!important}.play-head .total span{display:inline!important;margin-left:10px!important}
+  .tracks{grid-template-columns:1fr!important;gap:0!important}
+  .track{grid-template-columns:34px minmax(0,1fr) auto!important;gap:10px!important;padding:15px 4px!important;min-width:0}
+  .track span{min-width:0}.track b{font-size:15px!important;line-height:1.2!important}.track small{font-size:12px!important;line-height:1.35!important;overflow-wrap:anywhere}
+  .track-time{font-size:13px!important}.spotify-note{font-size:13px!important;line-height:1.45!important;margin-top:18px!important}
+
+  .block-list{display:flex!important;flex-direction:column!important;gap:9px!important}
+  .block{display:grid!important;grid-template-columns:82px minmax(0,1fr)!important;gap:5px 12px!important;padding:14px!important;border:1px solid #d6deee!important;border-radius:12px!important;background:#fff!important;align-items:start!important}
+  .block strong{grid-column:1;grid-row:1/3;font-size:13px!important;line-height:1.25!important}
+  .block>span:first-of-type,.block .phase{display:none!important}
+  .block .move{grid-column:2;grid-row:1;font-size:14px!important;line-height:1.25!important;min-width:0}
+  .block .move+span{grid-column:2;grid-row:2;font-size:12px!important;color:#536785}
+
+  .cues{grid-template-columns:1fr!important;gap:12px!important}
+  .cue{min-height:0!important;padding:18px!important}.cue b{font-size:18px!important}.cue p{font-size:15px!important;line-height:1.48!important}
+  .checklist{grid-template-columns:1fr!important;gap:12px!important}.checklist li{font-size:15px!important;line-height:1.4!important;padding-left:34px!important}
+  .source{padding:18px 0!important}.source b{font-size:15px!important;line-height:1.3!important}.source a,.source p{font-size:13px!important;line-height:1.45!important;overflow-wrap:anywhere!important}
 }
 </style>
 </head>
