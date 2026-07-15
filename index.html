@@ -449,6 +449,8 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
   function transitionSignal(){tone(720,.12);tone(980,.18,.16);if(navigator.vibrate)navigator.vibrate([100,70,180]);overlay.classList.remove('countdown-flash');void overlay.offsetWidth;overlay.classList.add('countdown-flash')}
   const trackUri=t=>`spotify:track:${t.url.split('/track/')[1].split(/[?#]/)[0]}`;
   const trackIndexFromUri=uri=>ride.findIndex(t=>trackUri(t)===uri);
+  function excludeSpotifyFrameFromTabOrder(){const frame=spotifyCard.querySelector('iframe');if(frame)frame.tabIndex=-1}
+  new MutationObserver(excludeSpotifyFrameFromTabOrder).observe($('spotifyEmbed'),{childList:true,subtree:true});
   function loadSpotifyForCurrent(autoplay=false){
     if(!spotifyController)return;
     const uri=trackUri(ride[index]),changed=uri!==spotifyLoadedUri;
@@ -471,7 +473,7 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
     IFrameAPI.createController($('spotifyEmbed'),{uri:trackUri(ride[index]),width:'100%',height:152},controller=>{
       const readyLabel=()=>matchMedia('(max-width:340px)').matches?'Use Open in Spotify above':'Preview ready · tap Play';
       spotifyController=controller;spotifyLoadedUri=trackUri(ride[index]);spotifyCard.classList.add('embed-ready');spotifyState.textContent=readyLabel();
-      controller.addListener('ready',()=>{spotifyCard.classList.add('embed-ready');spotifyState.textContent=readyLabel()});
+      controller.addListener('ready',()=>{spotifyCard.classList.add('embed-ready');spotifyState.textContent=readyLabel();excludeSpotifyFrameFromTabOrder()});
       controller.addListener('playback_started',()=>{spotifyState.textContent='Starting playback…'});
       controller.addListener('playback_update',handleSpotifyPlayback);
     });
@@ -499,7 +501,7 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
   function openLiveMode(event){returnFocus=event?.currentTarget||document.activeElement;overlay.hidden=false;document.body.classList.add('live-open');render();requestAnimationFrame(()=>toggle.focus())}
   function closeLiveMode(){overlay.hidden=true;document.body.classList.remove('live-open');setRunning(false);if(returnFocus&&typeof returnFocus.focus==='function')returnFocus.focus()}
   open.addEventListener('click',openLiveMode);openQuick.addEventListener('click',openLiveMode);close.addEventListener('click',closeLiveMode);
-  overlay.addEventListener('keydown',event=>{if(event.key!=='Tab')return;const focusable=[...overlay.querySelectorAll('button:not([disabled]),a[href],iframe,[tabindex]:not([tabindex="-1"])')].filter(element=>element.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}});
+  overlay.addEventListener('keydown',event=>{if(event.key!=='Tab')return;const focusable=[...overlay.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(element=>element.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}});
   toggle.addEventListener('click',()=>setRunning(!running));prev.addEventListener('click',()=>{if(offset>8){offset=0;save();if(spotifyController){try{spotifyController.seek(0);if(running)spotifyController.play()}catch(e){}}render()}else jump(index-1)});next.addEventListener('click',()=>advance(false));
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&running)requestWakeLock()});
   document.addEventListener('keydown',e=>{if(overlay.hidden)return;const interactive=e.target.closest?.('button,a,summary,iframe');if(e.code==='Space'&&!interactive){e.preventDefault();setRunning(!running)}if(e.key==='ArrowRight'&&!interactive)advance(false);if(e.key==='ArrowLeft'&&!interactive)jump(index-1);if(e.key==='Escape')close.click()});
