@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#05070a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="First Ride Live">
+<meta name="apple-mobile-web-app-title" content="Blueberry Ride">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>First Ride Live — 45-minute spinning instructor console</title>
+<title>Blueberry Ride — Five indoor-cycling programs</title>
 <style>
 :root{--ink:#08151c;--muted:#5e6a70;--paper:#f7f5ef;--white:#fff;--acid:#d8ff42;--coral:#ff6b4a;--blue:#146cff;--line:#d9dedb;--soft:#eef1ec}
 *{box-sizing:border-box}html,body{margin:0;background:#dfe3df;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -165,37 +165,54 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
 .local-player-card{margin:18px 0 24px;padding:14px;border:1px solid #ffffff24;border-radius:20px;background:linear-gradient(135deg,#0c1621,#091017);box-shadow:0 18px 55px #0004}.local-player-connect{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:13px}.local-player-connect>div>b{display:flex;align-items:center;gap:8px;color:#20e8ff;font-size:11px;letter-spacing:.13em;text-transform:uppercase}.local-player-connect small{display:block;color:#9aa8b4;font-size:11px;margin-top:4px}.local-live-dot{width:8px;height:8px;border-radius:50%;background:#20e8ff;box-shadow:0 0 12px #20e8ff}.local-player-card[data-status="playing"] .local-live-dot{animation:localPulse 1.25s ease infinite}.local-player-card[data-status="error"] .local-live-dot,.local-player-card[data-status="missing"] .local-live-dot{background:#ff6b4a;box-shadow:0 0 12px #ff6b4a}@keyframes localPulse{50%{opacity:.35;transform:scale(.75)}}.test-audio-badge{display:inline-flex;align-items:center;min-height:32px;border:1px solid #20e8ff55;border-radius:999px;background:#11242c;color:#bff8ff;padding:0 11px;font-size:10px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}.local-player-body{display:grid;grid-template-columns:132px minmax(0,1fr);gap:18px;align-items:center}.local-cover-shell{aspect-ratio:1;border-radius:15px;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,#20e8ff44,#132632 48%,#0b1117);color:#20e8ff;font-size:44px}.local-cover-shell img{width:100%;height:100%;object-fit:cover}.local-track-info{min-width:0}.local-track-info>span{color:#20e8ff;font-size:10px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}.local-track-info h3{font-size:clamp(22px,3vw,34px);line-height:1.05;letter-spacing:-.035em;margin:7px 0 4px;overflow-wrap:anywhere}.local-track-info p{color:#aab6bf;font-size:14px;margin:0}.local-audio-progress{height:7px;border-radius:999px;background:#22303a;overflow:hidden;margin:17px 0 9px}.local-audio-progress i{display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#146cff,#20e8ff);transition:width .2s linear}.local-player-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;color:#8f9da8;font-variant-numeric:tabular-nums}.local-player-foot label{display:flex;align-items:center;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:.08em}.local-player-foot input{width:92px;accent-color:#20e8ff}.local-privacy-note{margin:12px 2px 0;color:#74838f;font-size:10px;line-height:1.4}.local-player-foot input:focus-visible{outline:3px solid #f7ff61;outline-offset:3px}
 @media(max-width:760px){.local-player-card{margin:14px 0 22px;padding:11px}.local-player-connect{align-items:flex-start}.test-audio-badge{min-height:28px;font-size:9px}.local-player-body{grid-template-columns:98px minmax(0,1fr);gap:13px}.local-track-info h3{font-size:22px}.local-player-foot{align-items:flex-start;flex-direction:column;gap:8px}.local-player-foot input{width:120px}.local-privacy-note{font-size:9px}}
 @media(max-width:340px){.local-player-body{grid-template-columns:82px minmax(0,1fr)}.local-player-connect{display:grid}}
+/* V12 — five-program landing */
+.progress-dock{width:min(1180px,calc(100% - 40px));height:70px;padding:10px 12px 10px 18px;border-radius:18px;background:#070b12eF;border:1px solid #ffffff22;box-shadow:0 16px 44px #0008;backdrop-filter:blur(18px)}
+.progress-brand{color:#fff;text-decoration:none;min-width:0}.progress-brand b{font-size:13px;letter-spacing:.12em;text-transform:uppercase}.progress-brand small{color:#8e9aa9;font-size:10px}.progress-list{display:none}.live-launch{margin-left:auto;min-height:44px;padding:0 20px;border-radius:999px;background:#c8ff3d;color:#07100b;border:0;font-size:12px;font-weight:900}.reset-progress{width:44px;height:44px;border-radius:50%}
+body{padding-top:96px;background:#05070b}
+.page.cover.home-hero{width:min(1180px,calc(100% - 40px));height:clamp(650px,calc(100vh - 126px),820px);min-height:650px;margin:0 auto 24px;border-radius:28px;overflow:hidden;box-shadow:0 34px 100px #000c}
+.home-hero:before{background-image:linear-gradient(90deg,rgba(4,7,8,.97) 0%,rgba(4,7,8,.88) 38%,rgba(4,7,8,.22) 68%,rgba(4,7,8,.1) 100%),linear-gradient(180deg,rgba(4,7,8,.1),rgba(4,7,8,.32)),url("./hero-spin.jpg");background-position:center;background-size:cover;filter:saturate(.72) contrast(1.08)}
+.home-hero:after{inset:0;border:1px solid #ffffff18;border-radius:inherit;background:linear-gradient(180deg,transparent 62%,#05070b99);z-index:0}
+.home-hero .cover-copy{position:absolute;z-index:2;left:clamp(36px,6vw,82px);right:40%;top:50%;bottom:auto;transform:translateY(-50%);margin:0}
+.home-hero .eyebrow{margin:0 0 22px;color:#c8ff3d;font-size:11px;letter-spacing:.22em}
+.home-hero .display{font-size:clamp(54px,6.2vw,88px);line-height:.88;letter-spacing:-.065em;max-width:720px;margin:0;white-space:normal}.home-hero .display em{color:#c8ff3d}
+.home-hero .lede{max-width:570px;margin:28px 0 0;color:#d5dce2;font-size:clamp(16px,1.45vw,20px);line-height:1.45}
+.home-actions{display:flex;align-items:center;gap:12px;margin-top:30px}.home-primary,.home-secondary{min-height:52px;border-radius:999px;padding:0 22px;display:inline-flex;align-items:center;justify-content:center;font:inherit;font-size:13px;font-weight:900;text-decoration:none;cursor:pointer}.home-primary{gap:18px;background:#c8ff3d;color:#07100b;border:1px solid #c8ff3d}.home-primary span{font-size:19px}.home-secondary{color:#fff;background:#ffffff0d;border:1px solid #ffffff44}.home-primary:hover{background:#e2ff91}.home-secondary:hover{background:#ffffff1a}
+.home-metrics{display:flex;gap:30px;margin-top:28px;color:#8f9aa5;font-size:11px;text-transform:uppercase;letter-spacing:.09em}.home-metrics span{display:flex;align-items:baseline;gap:7px}.home-metrics b{color:#fff;font-size:22px;letter-spacing:-.04em;text-transform:none}
+.home-photo-note{position:absolute;z-index:2;right:26px;bottom:22px;color:#dce4e8aa;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.program-showcase{width:min(1180px,calc(100% - 40px));margin:0 auto 24px;padding:58px 42px 40px;border-radius:28px;background:#f5f4ee;color:#07101b;box-shadow:0 28px 80px #0008}.program-showcase-head{display:flex;align-items:end;justify-content:space-between;gap:48px;margin-bottom:34px}.program-showcase-head small{display:block;margin-bottom:8px;color:#075cff;font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.program-showcase-head h2{font-size:clamp(42px,5vw,70px);line-height:.9;letter-spacing:-.055em}.program-showcase-head p{max-width:430px;color:#586476;font-size:15px;line-height:1.5}.home-program-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.home-program-card{min-width:0;min-height:260px;padding:20px 18px;display:flex;flex-direction:column;text-align:left;border:1px solid #ccd3dc;border-radius:18px;background:#fff;color:#07101b;font:inherit;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}.home-program-card:hover{transform:translateY(-5px);border-color:#075cff;box-shadow:0 18px 36px #075cff1c}.home-program-card>span{color:#075cff;font-size:11px;font-weight:900;letter-spacing:.15em}.home-program-card>b{margin-top:32px;font-size:22px;line-height:1;letter-spacing:-.04em}.home-program-card>small{margin-top:12px;color:#647082;font-size:12px;line-height:1.45}.home-program-card>em{margin-top:auto;padding-top:20px;color:#07101b;font-size:11px;font-style:normal;font-weight:900}.program-guide-link{margin-top:28px;text-align:right}.program-guide-link a{color:#526070;font-size:12px;font-weight:800;text-decoration:none}.program-guide-link a:hover{color:#075cff}
+@media(max-width:900px){.home-program-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-program-card:last-child{grid-column:1/-1}.home-hero .cover-copy{right:35%}}
+@media(min-width:761px) and (max-height:720px){.page.cover.home-hero{height:calc(100vh - 116px);min-height:500px}.home-hero .cover-copy{right:38%;top:49%}.home-hero .eyebrow{margin-bottom:12px}.home-hero .display{font-size:54px;line-height:.88}.home-hero .lede{max-width:540px;margin-top:15px;font-size:14px}.home-actions{margin-top:18px}.home-primary,.home-secondary{min-height:44px}.home-metrics{margin-top:14px}}
+@media(max-width:760px){body{padding-top:78px}.progress-dock{width:calc(100% - 20px);height:58px;padding:7px 8px 7px 13px;border-radius:14px}.progress-brand b{font-size:11px}.progress-brand small{font-size:8px}.live-launch{min-height:40px;padding:0 14px;font-size:10px}.reset-progress{display:none}.page.cover.home-hero{width:calc(100% - 20px)!important;height:720px!important;min-height:720px!important;margin:0 10px 14px!important;border-radius:20px!important}.home-hero:before{background-image:linear-gradient(180deg,rgba(4,7,8,.08) 0%,rgba(4,7,8,.2) 34%,rgba(4,7,8,.96) 61%,#05070b 100%),url("./hero-spin.jpg");background-position:center top}.home-hero .cover-copy{left:24px!important;right:24px!important;top:auto!important;bottom:54px!important;transform:none!important}.home-hero .eyebrow{font-size:9px!important;margin-bottom:15px!important}.home-hero .display{font-size:clamp(36px,10.5vw,42px)!important;line-height:.93!important}.home-hero .lede{font-size:14px!important;line-height:1.45!important;margin-top:18px!important}.home-actions{display:grid;grid-template-columns:1fr;margin-top:21px}.home-primary,.home-secondary{min-height:48px;width:100%;padding:0 16px}.home-metrics{gap:13px;margin-top:18px;flex-wrap:wrap}.home-metrics b{font-size:17px}.home-metrics span{font-size:8px}.home-photo-note{display:none}.program-showcase{width:auto;margin:0 10px 14px;padding:34px 18px 24px;border-radius:20px}.program-showcase-head{display:block;margin-bottom:24px}.program-showcase-head h2{font-size:44px}.program-showcase-head p{margin-top:16px;font-size:14px}.home-program-grid{grid-template-columns:1fr}.home-program-card,.home-program-card:last-child{grid-column:auto;min-height:190px}.home-program-card>b{margin-top:22px}.program-guide-link{text-align:left}}
 </style>
 </head>
 <body>
-<nav class="progress-dock" aria-label="Preparation progress">
-  <div class="progress-brand"><b>First ride</b><small>Preparation progress</small></div>
+<nav class="progress-dock" aria-label="Primary navigation">
+  <a class="progress-brand" href="#home"><b>Blueberry Ride</b><small>Five-program live console</small></a>
   <div class="progress-list" id="progressList"></div>
-  <button class="live-launch" id="openLive" type="button">▶ Choose a program</button>
-  <button class="reset-progress" id="resetProgress" type="button" title="Reset preparation progress" aria-label="Reset preparation progress">↻</button>
+  <button class="live-launch" id="openLive" type="button">Choose a ride</button>
+  <button class="reset-progress" id="resetProgress" type="button" title="Reset live session" aria-label="Reset live session">↻</button>
 </nav>
-<section class="page cover">
-  <div class="cover-ring r1"></div><div class="cover-ring r2"></div>
+<section class="page cover home-hero" id="home">
   <div class="cover-copy">
-    <div class="eyebrow">Five music-synced indoor cycling programs</div>
-    <h1 class="display">First ride.<br><em>Live.</em></h1>
-    <p class="lede">Choose a program, press Start, and coach. The exercise timer, generated test music, track changes, and teaching cues now move together in one live console.</p>
-    <div class="cover-meta"><span class="kicker"><i class="dot"></i> Test music included · no folder setup</span><span class="kicker">5 programs · 64 ride blocks</span><a class="kicker" href="First-Ride-Instructor-Guide.pdf" download>Download guide ↓</a></div>
+    <div class="eyebrow">Five rides · one live console</div>
+    <h1 class="display">Pick the energy.<br><em>Press start.</em><br>Teach the room.</h1>
+    <p class="lede">Five complete 45-minute indoor-cycling programs with clear coaching cues, automatic exercise changes, and an audible built-in test beat.</p>
+    <div class="home-actions"><button class="home-primary" id="openLiveQuick" type="button">Choose your program <span>→</span></button><a class="home-secondary" href="#programs">Explore the five rides</a></div>
+    <div class="home-metrics"><span><b>5</b> programs</span><span><b>≈45</b> minutes each</span><span><b>64</b> coached blocks</span></div>
   </div>
-  <svg class="cover-art" viewBox="0 0 600 600" aria-label="Abstract indoor cyclist illustration">
-    <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#d8ff42"/><stop offset="1" stop-color="#ff6b4a"/></linearGradient></defs>
-    <circle cx="170" cy="410" r="105" fill="none" stroke="#fff" stroke-width="18" opacity=".9"/><circle cx="430" cy="410" r="105" fill="none" stroke="#fff" stroke-width="18" opacity=".9"/>
-    <path d="M170 410L255 265L330 410L220 410L300 315L430 410" fill="none" stroke="url(#g)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M255 265L344 266M320 245L374 244M300 315L350 205" fill="none" stroke="#fff" stroke-width="17" stroke-linecap="round"/>
-    <circle cx="374" cy="143" r="42" fill="#d8ff42"/><path d="M366 190L316 255L250 258M318 224L396 261" fill="none" stroke="#fff" stroke-width="24" stroke-linecap="round"/>
-  </svg>
-  <div class="footer">Test edition uses original generated audio only. Cover photograph: U.S. Air Force / Public Domain. Not medical advice.</div><div class="page-no">01</div>
+  <div class="home-photo-note">Built for a first class · Photo: U.S. Air Force / Public Domain</div>
 </section>
 
-<section class="quick-start" aria-labelledby="quickStartTitle">
-  <div class="quick-start-head"><div><small>Built for the room</small><h2 id="quickStartTitle">Choose. Start. Coach.</h2></div><p>Everything operational is already connected for this test: music, timing, exercise changes, covers, progress, and recovery controls.</p></div>
-  <div class="quick-start-steps"><div class="quick-step"><b>1 · Choose</b><span>Select one of five beginner-friendly programs before the class begins.</span></div><div class="quick-step"><b>2 · Start</b><span>One button launches the generated test mix and the authoritative exercise timer.</span></div><div class="quick-step"><b>3 · Coach</b><span>Follow the live cues; Previous, Next, Pause, and Reset keep music and timing together.</span></div></div>
-  <div class="quick-start-actions"><button class="quick-action primary" id="openLiveQuick" type="button">Choose a program →</button><a class="quick-action secondary" href="#foundations">Review safety guide</a></div>
+<section class="program-showcase" id="programs" aria-labelledby="programShowcaseTitle">
+  <div class="program-showcase-head"><div><small>Choose the room’s energy</small><h2 id="programShowcaseTitle">Five ways to move.</h2></div><p>Every ride is beginner-friendly, fully timed, and ready in the live console. Pick a direction and start coaching.</p></div>
+  <div class="home-program-grid">
+    <button class="home-program-card" data-home-program="01" type="button"><span>01</span><b>Rhythm Ride</b><small>Simple roads, climbs, recoveries, and short cadence efforts.</small><em>44:56 · 14 blocks →</em></button>
+    <button class="home-program-card" data-home-program="02" type="button"><span>02</span><b>Rolling Hills</b><small>Feel-good energy with clear hill and recovery contrast.</small><em>45:38 · 13 blocks →</em></button>
+    <button class="home-program-card" data-home-program="03" type="button"><span>03</span><b>Dance Road</b><small>Controlled dance-pop efforts with uncomplicated choreography.</small><em>45:00 · 12 blocks →</em></button>
+    <button class="home-program-card" data-home-program="04" type="button"><span>04</span><b>Throwback Power</b><small>Recognizable energy, simple climbs, and measured pushes.</small><em>44:58 · 12 blocks →</em></button>
+    <button class="home-program-card" data-home-program="05" type="button"><span>05</span><b>Global Energy</b><small>Confidence-building roads, hills, and cadence efforts.</small><em>44:54 · 13 blocks →</em></button>
+  </div>
+  <div class="program-guide-link"><a href="#foundations">Continue to the instructor safety guide ↓</a></div>
 </section>
 
 <section class="page" id="foundations" data-step="0" data-title="Foundations">
@@ -354,7 +371,7 @@ html{scroll-behavior:smooth}body{padding-top:104px;background:radial-gradient(ci
         <section class="local-player-card" id="localPlayerCard" data-status="ready" aria-label="Built-in test music player for the current exercise">
           <audio id="localAudio" preload="metadata"></audio>
           <div class="local-player-connect"><div><b><i class="local-live-dot" aria-hidden="true"></i>Built-in test music</b><small id="localAudioState" aria-live="polite">Ready · starts with the exercise timer</small></div><span class="test-audio-badge">Generated audio</span></div>
-          <div class="local-player-body"><div class="local-cover-shell"><img id="localCover" src="./test-art/01.svg" alt="Current program artwork"><span id="localCoverFallback" aria-hidden="true" hidden>♫</span></div><div class="local-track-info"><span>Now playing with this exercise</span><h3 id="localAudioTitle">Good to Go</h3><p><span id="localAudioArtist">LÒNIS, Daphne Willis</span></p><div class="local-audio-progress" aria-hidden="true"><i id="localAudioBar"></i></div><div class="local-player-foot"><small id="localAudioTime">00:00 / 00:16 loop</small><label>Volume <input id="localVolume" type="range" min="0" max="1" step="0.05" value="0.9" aria-label="Test music volume"></label></div></div></div>
+          <div class="local-player-body"><div class="local-cover-shell"><img id="localCover" src="./test-art/01.svg" alt="Current program artwork"><span id="localCoverFallback" aria-hidden="true" hidden>♫</span></div><div class="local-track-info"><span>Now playing with this exercise</span><h3 id="localAudioTitle">Good to Go</h3><p><span id="localAudioArtist">LÒNIS, Daphne Willis</span></p><div class="local-audio-progress" aria-hidden="true"><i id="localAudioBar"></i></div><div class="local-player-foot"><small id="localAudioTime">Preparing test loop</small><label>Volume <input id="localVolume" type="range" min="0" max="1" step="0.05" value="0.9" aria-label="Test music volume"></label></div></div></div>
           <p class="local-privacy-note">Temporary functional test: these short electronic loops were generated for this website and repeat until the next exercise begins.</p>
         </section>
         <span id="liveTrack" hidden>Good to Go</span><span id="liveArtist" hidden>LÒNIS, Daphne Willis</span>

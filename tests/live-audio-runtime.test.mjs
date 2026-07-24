@@ -42,12 +42,15 @@ try{
 
   await send('Page.enable');await send('Runtime.enable');
   await evaluate(`localStorage.clear();location.reload()`);await wait(1000);
-  await evaluate(`openLiveQuick.click();document.querySelector('[data-program="01"]').click()`);await wait(300);
+  const landingTitle=await evaluate(`openLiveQuick.click();closeChooser.click();document.title`);
+  assert.equal(landingTitle,'Blueberry Ride — Five indoor-cycling programs','Closing live mode must restore the rebranded landing title');
+  await evaluate(`document.querySelector('[data-home-program="01"]').click()`);await wait(300);
 
   await evaluate(`liveToggle.click()`);await wait(1200);
-  let state=await evaluate(`({elapsed:elapsedTime.textContent,label:liveToggleLabel.textContent,paused:localAudio.paused,status:localAudioState.textContent})`);
+  let state=await evaluate(`({elapsed:elapsedTime.textContent,label:liveToggleLabel.textContent,paused:localAudio.paused,status:localAudioState.textContent,audioTime:localAudioTime.textContent})`);
   assert.ok(elapsedSeconds(state.elapsed)>=1,'Start must advance the authoritative timer');
   assert.equal(state.label,'Pause music + timer');assert.equal(state.paused,false);assert.match(state.status,/playing/i);
+  assert.equal(state.audioTime,'Looping until the next exercise');
 
   await evaluate(`liveToggle.click()`);await wait(100);const pausedAt=await evaluate(`elapsedTime.textContent`);await wait(1100);
   state=await evaluate(`({elapsed:elapsedTime.textContent,paused:localAudio.paused})`);
@@ -68,6 +71,10 @@ try{
   await evaluate(`localAudio.play=()=>Promise.reject(new DOMException('forced rejection','NotAllowedError'));liveToggle.click()`);await wait(1200);
   state=await evaluate(`({elapsed:elapsedTime.textContent,label:liveToggleLabel.textContent,status:localAudioState.textContent})`);
   assert.ok(elapsedSeconds(state.elapsed)>=1,'Rejected audio.play() must not stop the authoritative timer');assert.equal(state.label,'Pause music + timer');assert.match(state.status,/could not be played/i);
+
+  await evaluate(`liveToggle.click();localAudio.play=()=>new Promise(()=>{});liveToggle.click()`);await wait(1200);
+  state=await evaluate(`({elapsed:elapsedTime.textContent,label:liveToggleLabel.textContent})`);
+  assert.ok(elapsedSeconds(state.elapsed)>=1,'Pending audio.play() must not stop the authoritative timer');assert.equal(state.label,'Pause music + timer');
 
   await evaluate(`liveToggle.click();const first=TRAINING_PROGRAMS[0].tracks[0].seconds;localStorage.setItem('firstRideLiveV5',JSON.stringify({version:5,programId:'01',elapsed:first-0.5}));location.reload()`);await wait(900);
   await evaluate(`openLiveQuick.click();document.querySelector('[data-program="01"]').click();liveToggle.click()`);await wait(1600);

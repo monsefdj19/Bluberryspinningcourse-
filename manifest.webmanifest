@@ -1,7 +1,7 @@
 {
-  "name": "First Ride Live — Spinning Instructor Console",
-  "short_name": "First Ride",
-  "description": "A 44:56 live indoor-cycling instructor timer with cues, transitions, Spotify links, and offline support.",
+  "name": "Blueberry Ride — Five-program instructor console",
+  "short_name": "Blueberry Ride",
+  "description": "Five approximately 45-minute indoor-cycling programs with coaching cues, an authoritative timer, and built-in generated test music.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

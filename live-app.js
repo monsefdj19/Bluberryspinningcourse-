@@ -34,7 +34,7 @@
   function showAudioState(state){
     const labels={missing:'Test track unavailable',ready:'Ready · starts with the exercise timer',playing:'Test music playing with the exercise',paused:'Music and timer paused',ended:'Loop restarting',error:'Test audio could not be played'};
     audioState.textContent=labels[state.status]||'Built-in test music ready';
-    audioTime.textContent=`${fmt(state.currentTime)} / ${state.duration?`${fmt(state.duration)} loop`:'--:--'}`;
+    audioTime.textContent=state.status==='playing'?'Looping until the next exercise':state.duration?'Test loop ready':'Preparing test loop';
     audioBar.style.width=`${state.duration?Math.min(100,state.currentTime/state.duration*100):0}%`;
     $('localPlayerCard').dataset.status=state.status;
   }
@@ -98,7 +98,7 @@
     if(value){
       const hasAudio=Boolean(audioPlayer.sourceFor(currentProgram.id,index));
       if(elapsed>=totalSeconds()){elapsed=0;index=0;offset=0}
-      if(hasAudio)await syncAudio(true);else audioState.textContent='Timer running · this generated test track is unavailable';
+      if(hasAudio)syncAudio(true);else audioState.textContent='Timer running · this generated test track is unavailable';
       running=true;runningBaseElapsed=elapsed;runningStartedAt=Date.now();requestWakeLock();
     }else{running=false;runningBaseElapsed=elapsed;runningStartedAt=0;audioPlayer.pause();releaseWakeLock()}
     save();render();return true;
@@ -112,10 +112,11 @@
   }
   function showChooser(){if(!overlay.hidden)setRunning(false);chooser.hidden=false;shell.hidden=true;overlay.scrollTop=0;overlay.setAttribute('aria-label','Choose a training program');renderProgramCards();requestAnimationFrame(()=>programGrid.querySelector('.program-card.selected,.program-card')?.focus())}
   function openLiveMode(event){returnFocus=event?.currentTarget||document.activeElement;overlay.hidden=false;document.body.classList.add('live-open');showChooser()}
-  function closeLiveMode(){if(currentProgram)setRunning(false);overlay.hidden=true;document.body.classList.remove('live-open');document.title='First Ride Live — 45-minute spinning instructor console';if(returnFocus&&typeof returnFocus.focus==='function')returnFocus.focus()}
+  function closeLiveMode(){if(currentProgram)setRunning(false);overlay.hidden=true;document.body.classList.remove('live-open');document.title='Blueberry Ride — Five indoor-cycling programs';if(returnFocus&&typeof returnFocus.focus==='function')returnFocus.focus()}
 
   volume.addEventListener('input',()=>{audio.volume=Number(volume.value)});audio.volume=Number(volume.value);
   open.addEventListener('click',openLiveMode);openQuick.addEventListener('click',openLiveMode);close.addEventListener('click',closeLiveMode);closeChooser.addEventListener('click',closeLiveMode);changeProgram.addEventListener('click',showChooser);
+  document.querySelectorAll('[data-home-program]').forEach(card=>card.addEventListener('click',()=>{returnFocus=card;overlay.hidden=false;document.body.classList.add('live-open');selectProgram(card.dataset.homeProgram)}));
   overlay.addEventListener('keydown',event=>{if(event.key==='Escape'){closeLiveMode();return}if(event.key!=='Tab')return;const focusable=[...overlay.querySelectorAll('button:not([disabled]),a[href],input:not([type="file"]),[tabindex]:not([tabindex="-1"])')].filter(element=>element.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}});
   toggle.addEventListener('click',()=>setRunning(!running));prev.addEventListener('click',()=>offset>8?setElapsed(before(index)):jump(index-1));next.addEventListener('click',()=>advance(false));
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&running){reconcileClock(true);render();syncAudio(true);requestWakeLock()}});

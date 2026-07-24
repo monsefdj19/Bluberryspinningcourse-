@@ -18,6 +18,10 @@ assert html.index('<script src="local-audio.js"></script>') < html.index('<scrip
 assert all(f'id="{element}"' in html for element in ('localAudio','localCover','localAudioTitle','localAudioArtist','localAudioState','localAudioTime','localAudioBar'))
 assert 'id="localAudioFiles"' not in html and 'id="chooseLocalMusic"' not in html, 'hosted test music must not ask for a folder'
 assert 'id="liveSpotify"' not in html and 'id="spotifyEmbed"' not in html and 'open.spotify.com/embed/iframe-api' not in html
+assert 'class="page cover home-hero"' in html and all(phrase in html for phrase in ('Pick the energy.','Press start.','Teach the room.')), 'five-program landing hero is missing'
+assert html.count('data-home-program=') == 5, 'landing page must show all five programs'
+assert 'Looping until the next exercise' in live_app, 'player must explain the short generated audio as a loop, not a 16-second track'
+assert '00:00 / 00:16' not in html and 'Preparing test loop' in html, 'shipped player placeholder must not expose the old 16-second framing'
 assert 'window.TRAINING_PROGRAMS' in programs_js, 'five-program data export is missing'
 match = re.search(r'window\.TRAINING_PROGRAMS\s*=\s*(\[.*\]);\s*$', programs_js, re.S)
 assert match, 'programs.js is not parseable as a JSON-backed export'
@@ -52,4 +56,5 @@ assert "overlay.setAttribute('aria-label','Choose a training program')" in live_
 assert "addEventListener('pageshow'" in live_app, 'pageshow reconciliation is missing'
 assert 'if(response.ok)' in service_worker and 'await cache.put' in service_worker, 'service worker must only await-cache successful responses'
 assert './local-audio.js' in service_worker, 'local audio runtime must be cached'
+assert './hero-spin.jpg' in service_worker, 'landing photograph must be cached'
 print('five-program static contract: PASS')
