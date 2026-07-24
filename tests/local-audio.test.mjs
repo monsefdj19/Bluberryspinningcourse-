@@ -16,10 +16,10 @@ const tracks=[
 ];
 
 class FakeAudio{
-  constructor(){this.src='';this.currentTime=0;this.duration=20;this.readyState=0;this.paused=true;this.loop=false;this.listeners={};this.playCount=0}
+  constructor(){this.src='';this.currentTime=0;this.duration=20;this.readyState=0;this.paused=true;this.loop=false;this.listeners={};this.playCount=0;this.loadCount=0}
   addEventListener(type,handler){(this.listeners[type]??=[]).push(handler)}
   removeEventListener(type,handler){this.listeners[type]=(this.listeners[type]||[]).filter(item=>item!==handler)}
-  load(){queueMicrotask(()=>{this.readyState=1;this.emit('loadedmetadata')})}
+  load(){this.loadCount++;queueMicrotask(()=>{this.readyState=1;this.emit('loadedmetadata')})}
   async play(){this.paused=false;this.playCount++}
   pause(){this.paused=true}
   removeAttribute(name){if(name==='src')this.src=''}
@@ -44,6 +44,10 @@ assert.equal(audio.currentTime,4,'looping test audio should seek to exercise off
 assert.equal(audio.paused,false);
 assert.equal(await controller.load('02',12,4,false),true);
 assert.equal(audio.src,'./test-audio/02-13.mp3');
+const beforeRetry=audio.loadCount;
+audio.emit('error');
+await controller.sync('02',12,4,false);
+assert.equal(audio.loadCount,beforeRetry+1,'retrying an errored track must reload its source');
 assert.equal(await controller.load('05',0,0,true),false);
 assert.equal(states.at(-1).status,'missing');
 

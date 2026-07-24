@@ -38,7 +38,7 @@
     const pause=()=>{audio.pause();state('paused')};
     audio.addEventListener('timeupdate',()=>state(audio.paused?'paused':'playing'));
     audio.addEventListener('ended',()=>{state('ended');onEnded()});
-    audio.addEventListener('error',()=>state('error'));
+    audio.addEventListener('error',()=>{currentKey='';state('error')});
     return{setSources,sourceFor,load,sync,pause,destroy(){audio.pause();currentKey='';audio.removeAttribute?.('src')},get currentKey(){return currentKey}};
   }
   globalThis.LocalAudio={createController};
