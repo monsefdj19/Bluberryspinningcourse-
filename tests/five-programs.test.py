@@ -20,6 +20,10 @@ assert 'id="localAudioFiles"' not in html and 'id="chooseLocalMusic"' not in htm
 assert 'id="liveSpotify"' not in html and 'id="spotifyEmbed"' not in html and 'open.spotify.com/embed/iframe-api' not in html
 assert 'class="page cover home-hero"' in html and all(phrase in html for phrase in ('Pick the energy.','Press start.','Teach the room.')), 'five-program landing hero is missing'
 assert html.count('data-home-program=') == 5, 'landing page must show all five programs'
+assert 'data:image/png;base64' in html and 'background-size:auto 100%;background-position:78% center' in html, 'landing must preserve the original embedded photographic cover treatment'
+assert 'hero-spin.jpg' not in html and '.home-hero:before{' not in html and '.home-hero:after{' not in html, 'landing must not override the original cover image or crop'
+assert '.home-hero .eyebrow{margin:0 0 22px;color:#146cff' in html and '.home-hero .display em{color:#146cff}' in html, 'home accents must retain the established blue identity'
+assert '.home-primary{gap:18px;background:#146cff;color:#fff;border:1px solid #146cff}' in html, 'home CTA must retain the established blue identity'
 assert 'Looping until the next exercise' in live_app, 'player must explain the short generated audio as a loop, not a 16-second track'
 assert '00:00 / 00:16' not in html and 'Preparing test loop' in html, 'shipped player placeholder must not expose the old 16-second framing'
 assert 'window.TRAINING_PROGRAMS' in programs_js, 'five-program data export is missing'
@@ -56,5 +60,6 @@ assert "overlay.setAttribute('aria-label','Choose a training program')" in live_
 assert "addEventListener('pageshow'" in live_app, 'pageshow reconciliation is missing'
 assert 'if(response.ok)' in service_worker and 'await cache.put' in service_worker, 'service worker must only await-cache successful responses'
 assert './local-audio.js' in service_worker, 'local audio runtime must be cached'
-assert './hero-spin.jpg' in service_worker, 'landing photograph must be cached'
+assert './hero-spin.jpg' not in service_worker, 'removed replacement cover must not block service-worker installation'
+assert "first-ride-live-v15" in service_worker, 'branding and audio race fixes must ship under a fresh service-worker cache'
 print('five-program static contract: PASS')

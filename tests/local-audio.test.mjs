@@ -51,4 +51,18 @@ assert.equal(audio.loadCount,beforeRetry+1,'retrying an errored track must reloa
 assert.equal(await controller.load('05',0,0,true),false);
 assert.equal(states.at(-1).status,'missing');
 
+const delayedAudio=new FakeAudio(),delayedStates=[];
+delayedAudio.duration=NaN;
+delayedAudio.load=function(){this.loadCount++};
+const delayedController=api.createController({audio:delayedAudio,onState:state=>delayedStates.push(state)});
+delayedController.setSources(tracks);
+const preparing=delayedController.sync('01',0,0,false);
+await Promise.resolve();
+await delayedController.sync('01',0,0,true);
+assert.equal(delayedAudio.paused,false,'a newer Start request must begin playback while initial metadata is pending');
+delayedAudio.duration=20;delayedAudio.readyState=1;delayedAudio.emit('loadedmetadata');
+await preparing;
+assert.equal(delayedAudio.paused,false,'stale preparation must not pause audio after Start');
+assert.equal(delayedStates.at(-1).status,'playing','stale preparation must not overwrite playing state');
+
 console.log('hosted-audio contract: PASS');
