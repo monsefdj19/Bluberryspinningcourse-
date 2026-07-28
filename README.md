@@ -5,9 +5,9 @@ A self-contained indoor-cycling instructor guide and five-program live training 
 ## Live features
 
 - Choose one of five approximately 45-minute programs before entering live training
-- 64 ordered ride blocks with RPM, RPE, resistance, position, patterns, coaching cues, and hosted test-audio mapping
-- No folder selection: generated rights-cleared test loops are included with the website
-- One Start/Pause control keeps the test music and exercise timer together
+- 64 ordered ride blocks with RPM, RPE, resistance, position, patterns, coaching cues, and hosted full-track music
+- No folder selection: all five complete playlists are included with the website
+- One Start/Pause control keeps the music and exercise timer together
 - Automatic track changes for Previous, Next, exercise transitions, Reset, and restored sessions
 - Program artwork, track title, artist, playback time, progress, and volume in the player
 - Persistent selected-program title while teaching
@@ -27,16 +27,16 @@ A self-contained indoor-cycling instructor guide and five-program live training 
 4. Throwback Power — 12 tracks, 44:58
 5. Global Energy — 13 tracks, 44:54
 
-## Test music
+## Built-in music
 
 1. Open Live Ride and choose a program.
 2. Press **Start music + timer**.
-3. The matching generated loop starts automatically and changes with the exercise.
+3. The matching full track starts automatically and changes with the exercise.
 
-The short electronic loops in `test-audio/` were generated specifically for functional testing and contain no third-party recordings. Each loop repeats until the authoritative exercise timer advances to the next ride block. Program artwork in `test-art/` was generated for the same test release.
+The 64 hosted files in `music/` map one-to-one to the five program plans. The exercise timer remains authoritative: shorter music loops safely until the exercise boundary, and longer music changes when the next exercise starts. The invalid first source file for Rolling Hills was replaced with the complete original `Blueberry Warm-Up` track.
 
 ## Hosting
 
-Published with GitHub Pages from the `main` branch root. Commercial audio files are intentionally excluded from the public repository and deployment. Replace the test system only with properly authorized media or an official streaming integration.
+Published with GitHub Pages from the `main` branch root. Music files are network-loaded on demand rather than included in the PWA installation cache.
 
 This is an educational planning aid and not a substitute for recognized instructor certification, CPR/AED training, participant screening, or medical advice.

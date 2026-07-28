@@ -32,9 +32,9 @@
     updateMediaSession();
   }
   function showAudioState(state){
-    const labels={missing:'Test track unavailable',ready:'Ready · starts with the exercise timer',playing:'Test music playing with the exercise',paused:'Music and timer paused',ended:'Loop restarting',error:'Test audio could not be played'};
-    audioState.textContent=labels[state.status]||'Built-in test music ready';
-    audioTime.textContent=state.status==='playing'?'Looping until the next exercise':state.duration?'Test loop ready':'Preparing test loop';
+    const labels={missing:'Track unavailable',ready:'Ready · starts with the exercise timer',playing:'Music playing with the exercise',paused:'Music and timer paused',ended:'Track ended',error:'Music could not be played'};
+    audioState.textContent=labels[state.status]||'Built-in class music ready';
+    audioTime.textContent=state.duration?`${fmt(state.currentTime)} / ${fmt(state.duration)}`:'Loading full track';
     audioBar.style.width=`${state.duration?Math.min(100,state.currentTime/state.duration*100):0}%`;
     $('localPlayerCard').dataset.status=state.status;
   }
@@ -98,7 +98,7 @@
     if(value){
       const hasAudio=Boolean(audioPlayer.sourceFor(currentProgram.id,index));
       if(elapsed>=totalSeconds()){elapsed=0;index=0;offset=0}
-      if(hasAudio)syncAudio(true);else audioState.textContent='Timer running · this generated test track is unavailable';
+      if(hasAudio)syncAudio(true);else audioState.textContent='Timer running · this music track is unavailable';
       running=true;runningBaseElapsed=elapsed;runningStartedAt=Date.now();requestWakeLock();
     }else{running=false;runningBaseElapsed=elapsed;runningStartedAt=0;audioPlayer.pause();releaseWakeLock()}
     save();render();return true;

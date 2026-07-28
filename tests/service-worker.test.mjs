@@ -34,7 +34,15 @@ listeners.fetch({
 });
 const response=await responsePromise;
 assert.equal(await response.text(),'fresh network response','cache-write failure must not replace a successful network response');
-assert.equal(cachePutAttempts,1,'successful responses should attempt to update the cache');
+assert.equal(cachePutAttempts,1,'successful app responses should attempt to update the cache');
+
+listeners.fetch({
+  request:new Request('https://example.test/music/01-01.mp3'),
+  respondWith:value=>{responsePromise=value}
+});
+const musicResponse=await responsePromise;
+assert.equal(await musicResponse.text(),'fresh network response');
+assert.equal(cachePutAttempts,1,'large hosted music must stay network-loaded rather than filling the PWA cache');
 
 context.fetch=async()=>{throw new Error('offline')};
 listeners.fetch({

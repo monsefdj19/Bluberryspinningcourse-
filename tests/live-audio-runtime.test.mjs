@@ -41,7 +41,10 @@ try{
   const elapsedSeconds=text=>{const [minutes,seconds]=text.split(':').map(Number);return minutes*60+seconds};
 
   await send('Page.enable');await send('Runtime.enable');
-  await evaluate(`localStorage.clear();location.reload()`);await wait(1000);
+  await send('Storage.clearDataForOrigin',{origin:`http://127.0.0.1:${pagePort}`,storageTypes:'local_storage'});await send('Page.reload');
+  let ready=false;
+  for(let attempt=0;attempt<50;attempt++){try{ready=await evaluate(`document.readyState==='complete'&&Boolean(window.openLiveQuick)`);if(ready)break}catch{}await wait(100)}
+  assert.equal(ready,true,'Reloaded application must become interactive');
   const landingTitle=await evaluate(`openLiveQuick.click();closeChooser.click();document.title`);
   assert.equal(landingTitle,'Blueberry Ride — Five indoor-cycling programs','Closing live mode must restore the rebranded landing title');
   await evaluate(`document.querySelector('[data-home-program="01"]').click()`);await wait(300);
@@ -50,23 +53,23 @@ try{
   let state=await evaluate(`({elapsed:elapsedTime.textContent,label:liveToggleLabel.textContent,paused:localAudio.paused,status:localAudioState.textContent,audioTime:localAudioTime.textContent})`);
   assert.ok(elapsedSeconds(state.elapsed)>=1,'Start must advance the authoritative timer');
   assert.equal(state.label,'Pause music + timer');assert.equal(state.paused,false);assert.match(state.status,/playing/i);
-  assert.equal(state.audioTime,'Looping until the next exercise');
+  assert.match(state.audioTime,/^\d{2}:\d{2} \/ \d{2}:\d{2}$/,'full-track player must show current and total time');
 
-  await evaluate(`liveToggle.click()`);await wait(100);const pausedAt=await evaluate(`elapsedTime.textContent`);await wait(1100);
+  await evaluate(`liveToggle.click()`);await wait(250);const pausedAt=await evaluate(`elapsedTime.textContent`);await wait(1100);
   state=await evaluate(`({elapsed:elapsedTime.textContent,paused:localAudio.paused})`);
   assert.equal(state.elapsed,pausedAt,'Pause must freeze the timer');assert.equal(state.paused,true,'Pause must pause audio');
 
   await evaluate(`liveNext.click()`);await wait(300);
   state=await evaluate(`({src:localAudio.currentSrc||localAudio.src,paused:localAudio.paused,count:liveCount.textContent})`);
-  assert.ok(state.src.endsWith('/test-audio/01-02.mp3'));assert.equal(state.paused,true);assert.equal(state.count,'Track 2 of 14');
+  assert.ok(state.src.endsWith('/music/01-02.mp3'));assert.equal(state.paused,true);assert.equal(state.count,'Track 2 of 14');
 
   await evaluate(`liveToggle.click()`);await wait(200);await evaluate(`liveNext.click()`);await wait(400);
   state=await evaluate(`({src:localAudio.currentSrc||localAudio.src,paused:localAudio.paused,count:liveCount.textContent})`);
-  assert.ok(state.src.endsWith('/test-audio/01-03.mp3'));assert.equal(state.paused,false);assert.equal(state.count,'Track 3 of 14');
+  assert.ok(state.src.endsWith('/music/01-03.mp3'));assert.equal(state.paused,false);assert.equal(state.count,'Track 3 of 14');
 
   await evaluate(`changeProgram.click();document.querySelector('[data-program="02"]').click()`);await wait(300);
   state=await evaluate(`({program:liveProgramTitle.textContent,src:localAudio.currentSrc||localAudio.src,paused:localAudio.paused,elapsed:elapsedTime.textContent})`);
-  assert.equal(state.program,'Rolling Hills and Recoveries');assert.ok(state.src.endsWith('/test-audio/02-01.mp3'));assert.equal(state.paused,true);assert.equal(state.elapsed,'00:00');
+  assert.equal(state.program,'Rolling Hills and Recoveries');assert.ok(state.src.endsWith('/music/02-01.mp3'));assert.equal(state.paused,true);assert.equal(state.elapsed,'00:00');
 
   await evaluate(`localAudio.play=()=>Promise.reject(new DOMException('forced rejection','NotAllowedError'));liveToggle.click()`);await wait(1200);
   state=await evaluate(`({elapsed:elapsedTime.textContent,label:liveToggleLabel.textContent,status:localAudioState.textContent})`);
@@ -79,7 +82,7 @@ try{
   await evaluate(`liveToggle.click();const first=TRAINING_PROGRAMS[0].tracks[0].seconds;localStorage.setItem('firstRideLiveV5',JSON.stringify({version:5,programId:'01',elapsed:first-0.5}));location.reload()`);await wait(900);
   await evaluate(`openLiveQuick.click();document.querySelector('[data-program="01"]').click();liveToggle.click()`);await wait(1600);
   state=await evaluate(`({count:liveCount.textContent,src:localAudio.currentSrc||localAudio.src,label:liveToggleLabel.textContent})`);
-  assert.equal(state.count,'Track 2 of 14','Automatic boundary must advance to track 2');assert.ok(state.src.endsWith('/test-audio/01-02.mp3'));assert.equal(state.label,'Pause music + timer');
+  assert.equal(state.count,'Track 2 of 14','Automatic boundary must advance to track 2');assert.ok(state.src.endsWith('/music/01-02.mp3'));assert.equal(state.label,'Pause music + timer');
 
   console.log('live audio runtime contract: PASS');
 }finally{
