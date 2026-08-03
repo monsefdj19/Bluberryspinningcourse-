@@ -9,7 +9,7 @@ import net from 'node:net';
 const root=new URL('..',import.meta.url).pathname.replace(/\/$/,'');
 const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 statSync(chrome);
-const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.mp3':'audio/mpeg','.svg':'image/svg+xml','.png':'image/png','.webmanifest':'application/manifest+json','.pdf':'application/pdf'};
+const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.mp3':'audio/mpeg','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.webmanifest':'application/manifest+json','.pdf':'application/pdf'};
 const server=createServer((req,res)=>{
   const requested=decodeURIComponent(new URL(req.url,'http://local.test').pathname);
   const relative=requested==='/'?'index.html':requested.replace(/^\//,'');
@@ -50,18 +50,21 @@ try{
   await evaluate(`document.querySelector('[data-home-program="01"]').click()`);await wait(300);
 
   await evaluate(`liveToggle.click()`);await wait(1200);
-  let state=await evaluate(`({elapsed:elapsedTime.textContent,label:liveToggleLabel.textContent,paused:localAudio.paused,status:localAudioState.textContent,audioTime:localAudioTime.textContent})`);
+  let state=await evaluate(`({elapsed:elapsedTime.textContent,label:liveToggleLabel.textContent,paused:localAudio.paused,status:localAudioState.textContent,audioTime:localAudioTime.textContent,cover:localCover.getAttribute('src'),coverWidth:localCover.naturalWidth,coverHeight:localCover.naturalHeight})`);
   assert.ok(elapsedSeconds(state.elapsed)>=1,'Start must advance the authoritative timer');
   assert.equal(state.label,'Pause music + timer');assert.equal(state.paused,false);assert.match(state.status,/playing/i);
   assert.match(state.audioTime,/^\d{2}:\d{2} \/ \d{2}:\d{2}$/,'full-track player must show current and total time');
+  assert.equal(state.cover,'./artwork/01-01.jpg','the player must show the current song album cover');
+  assert.ok(state.coverWidth>0&&state.coverHeight>0,'the current song album cover must load as a real image');
 
   await evaluate(`liveToggle.click()`);await wait(250);const pausedAt=await evaluate(`elapsedTime.textContent`);await wait(1100);
   state=await evaluate(`({elapsed:elapsedTime.textContent,paused:localAudio.paused})`);
   assert.equal(state.elapsed,pausedAt,'Pause must freeze the timer');assert.equal(state.paused,true,'Pause must pause audio');
 
   await evaluate(`liveNext.click()`);await wait(300);
-  state=await evaluate(`({src:localAudio.currentSrc||localAudio.src,paused:localAudio.paused,count:liveCount.textContent})`);
+  state=await evaluate(`({src:localAudio.currentSrc||localAudio.src,paused:localAudio.paused,count:liveCount.textContent,cover:localCover.getAttribute('src')})`);
   assert.ok(state.src.endsWith('/music/01-02.mp3'));assert.equal(state.paused,true);assert.equal(state.count,'Track 2 of 14');
+  assert.equal(state.cover,'./artwork/01-02.jpg','Next must update to the next song album cover');
 
   await evaluate(`liveToggle.click()`);await wait(200);await evaluate(`liveNext.click()`);await wait(400);
   state=await evaluate(`({src:localAudio.currentSrc||localAudio.src,paused:localAudio.paused,count:liveCount.textContent})`);
@@ -81,8 +84,10 @@ try{
 
   await evaluate(`liveToggle.click();const first=TRAINING_PROGRAMS[0].tracks[0].seconds;localStorage.setItem('firstRideLiveV5',JSON.stringify({version:5,programId:'01',elapsed:first-0.5}));location.reload()`);await wait(900);
   await evaluate(`openLiveQuick.click();document.querySelector('[data-program="01"]').click();liveToggle.click()`);await wait(1600);
-  state=await evaluate(`({count:liveCount.textContent,src:localAudio.currentSrc||localAudio.src,label:liveToggleLabel.textContent})`);
+  state=await evaluate(`({count:liveCount.textContent,src:localAudio.currentSrc||localAudio.src,label:liveToggleLabel.textContent,volume:localAudio.volume,cover:localCover.getAttribute('src')})`);
   assert.equal(state.count,'Track 2 of 14','Automatic boundary must advance to track 2');assert.ok(state.src.endsWith('/music/01-02.mp3'));assert.equal(state.label,'Pause music + timer');
+  assert.ok(state.volume>.7,'the incoming song must finish its short fade-in at the instructor volume');
+  assert.equal(state.cover,'./artwork/01-02.jpg','automatic boundaries must update the album cover');
 
   console.log('live audio runtime contract: PASS');
 }finally{

@@ -49,8 +49,13 @@ assert [len(p['tracks']) for p in programs] == [14, 13, 12, 12, 13]
 assert all(sum(t['seconds'] for t in p['tracks']) == p['totalSeconds'] for p in programs)
 assert all('url' not in t and 'embedUrl' not in t for p in programs for t in p['tracks'])
 assert all(t['audioSrc'].startswith('./music/') for p in programs for t in p['tracks'])
-assert all(t['artworkSrc'].startswith('./test-art/') for p in programs for t in p['tracks'])
-assert all('GENERATED TEST MIX' not in (root / f'test-art/{i:02d}.svg').read_text() for i in range(1,6)), 'final program artwork must not claim to be a generated test mix'
+artwork=[f"./artwork/{p['id']}-{index:02d}.jpg" for p in programs for index,_ in enumerate(p['tracks'],1)]
+assert 'songArtwork' in live_app and 'artworkSrc:songArtwork(program.id,index)' in live_app, 'runtime must map artwork per song rather than per program'
+assert len(set(artwork)) == 64, 'album artwork paths must be unique per song'
+assert all((root / path.removeprefix('./')).is_file() for path in artwork), 'mapped song artwork is missing'
+assert all((root / path.removeprefix('./')).stat().st_size > 1000 for path in artwork), 'song artwork must contain a real image'
+assert './artwork/01-01.jpg' in html and './test-art/' not in html, 'initial player fallback must use the first song cover, not obsolete shared artwork'
+assert html.count('id="localAudio"') == 1 and 'local-player-foot' in html, 'song-cover fallback change must preserve the existing player markup'
 assert len({t['audioSrc'] for p in programs for t in p['tracks']}) == 64
 assert all(all(t.get(field) for field in ('title', 'artist', 'exercise', 'rpm', 'rpe', 'position', 'resistance', 'pattern', 'cue')) for p in programs for t in p['tracks'])
 patterns=[t['pattern'].lower() for p in programs for t in p['tracks']]
@@ -63,6 +68,7 @@ assert 'Math.trunc(rawIndex)' in live_app and 'trackSeconds-1' in live_app and '
 assert "if(!saved||typeof saved!=='object')" in live_app and 'safeStore' in live_app, 'storage failure guards are missing'
 assert 'Spotify' not in live_app and 'spotify' not in live_app, 'Spotify runtime must be removed'
 assert 'LocalAudio.createController' in live_app and '.sync(' in live_app and '.setSources(' in live_app, 'hosted audio synchronization is missing'
+assert '.prepareBoundary(' in live_app and '.setVolume(' in live_app, 'smooth exercise-boundary audio transition is missing'
 assert "if(!ready){running=false" not in live_app, 'audio playback failure must not prevent the authoritative exercise timer from starting'
 assert 'setSources' in local_audio and 'createController' in local_audio
 assert "overlay.setAttribute('aria-label','Choose a training program')" in live_app, 'chooser dialog label is not restored'
@@ -70,5 +76,6 @@ assert "addEventListener('pageshow'" in live_app, 'pageshow reconciliation is mi
 assert 'if(response.ok&&!isMusic)' in service_worker and 'await cache.put' in service_worker, 'service worker must cache successful app assets while leaving large music network-loaded'
 assert './local-audio.js' in service_worker, 'local audio runtime must be cached'
 assert './hero-spin.jpg' not in service_worker, 'removed replacement cover must not block service-worker installation'
-assert "first-ride-live-v16" in service_worker, 'final main-page and complete-music release must ship under a fresh service-worker cache'
+assert "first-ride-live-v17" in service_worker, 'song-artwork and smooth-transition release must ship under a fresh service-worker cache'
+assert './test-art/' not in service_worker, 'obsolete shared program artwork must not remain in the app shell'
 print('five-program static contract: PASS')

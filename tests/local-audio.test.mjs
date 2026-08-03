@@ -16,7 +16,7 @@ const tracks=[
 ];
 
 class FakeAudio{
-  constructor(){this.src='';this.currentTime=0;this.duration=20;this.readyState=0;this.paused=true;this.loop=false;this.listeners={};this.playCount=0;this.loadCount=0}
+  constructor(){this.src='';this.currentTime=0;this.duration=20;this.readyState=0;this.paused=true;this.loop=false;this.volume=.9;this.listeners={};this.playCount=0;this.loadCount=0}
   addEventListener(type,handler){(this.listeners[type]??=[]).push(handler)}
   removeEventListener(type,handler){this.listeners[type]=(this.listeners[type]||[]).filter(item=>item!==handler)}
   load(){this.loadCount++;queueMicrotask(()=>{this.readyState=1;this.emit('loadedmetadata')})}
@@ -64,5 +64,28 @@ delayedAudio.duration=20;delayedAudio.readyState=1;delayedAudio.emit('loadedmeta
 await preparing;
 assert.equal(delayedAudio.paused,false,'stale preparation must not pause audio after Start');
 assert.equal(delayedStates.at(-1).status,'playing','stale preparation must not overwrite playing state');
+
+let now=0;const frames=[];
+const transitionAudio=new FakeAudio();transitionAudio.volume=.8;
+const transitionController=api.createController({
+  audio:transitionAudio,
+  now:()=>now,
+  requestAnimationFrame:callback=>{frames.push(callback);return frames.length},
+  fadeOutSeconds:2,
+  fadeInMs:1000,
+});
+transitionController.setSources(tracks);
+await transitionController.load('01',0,0,true);
+transitionController.setVolume(.8);
+transitionController.prepareBoundary(1);
+assert.equal(transitionAudio.volume,.4,'the outgoing song must fade during the final boundary seconds');
+const switching=transitionController.load('02',12,0,true);
+await Promise.resolve();
+await switching;
+assert.equal(transitionAudio.volume,0,'the incoming song must start silently before fading in');
+now=500;frames.shift()();
+assert.equal(transitionAudio.volume,.4,'the incoming song must fade in progressively');
+now=1000;frames.shift()();
+assert.equal(transitionAudio.volume,.8,'the incoming song must return to the instructor volume');
 
 console.log('hosted-audio contract: PASS');

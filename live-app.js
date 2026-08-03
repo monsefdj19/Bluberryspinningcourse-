@@ -1,5 +1,6 @@
 (()=>{
-  const programs=Array.isArray(window.TRAINING_PROGRAMS)?window.TRAINING_PROGRAMS:[];
+  const songArtwork=(programId,index)=>`./artwork/${programId}-${String(index+1).padStart(2,'0')}.jpg`;
+  const programs=Array.isArray(window.TRAINING_PROGRAMS)?window.TRAINING_PROGRAMS.map(program=>({...program,tracks:program.tracks.map((track,index)=>({...track,artworkSrc:songArtwork(program.id,index)}))})):[];
   const $=id=>document.getElementById(id);
   const overlay=$('liveOverlay'),chooser=$('programChooser'),programGrid=$('programGrid'),shell=$('liveShell');
   const open=$('openLive'),openQuick=$('openLiveQuick'),close=$('closeLive'),closeChooser=$('closeChooser'),changeProgram=$('changeProgram');
@@ -107,14 +108,14 @@
   function jump(i){setElapsed(before(Math.min(Math.max(i,0),ride.length-1)))}
   function advance(auto=false){if(index<ride.length-1){setElapsed(before(index+1));if(auto)transitionSignal()}else{setElapsed(totalSeconds());setRunning(false);transitionSignal()}}
   function tick(){
-    if(running){const prior=index;reconcileClock(false);const remaining=ride[index].seconds-offset,second=Math.ceil(remaining);if(second!==lastSecond){lastSecond=second;if(second===10)tone(520,.1);if(second>0&&second<=3)tone(620+(3-second)*90,.08);save()}if(index!==prior){transitionSignal();syncAudio(true)}render()}
+    if(running){const prior=index;reconcileClock(false);const remaining=ride[index].seconds-offset,second=Math.ceil(remaining);if(second!==lastSecond){lastSecond=second;if(second===10)tone(520,.1);if(second>0&&second<=3)tone(620+(3-second)*90,.08);save()}if(index!==prior){transitionSignal();syncAudio(true)}else audioPlayer.prepareBoundary(remaining);render()}
     requestAnimationFrame(tick);
   }
   function showChooser(){if(!overlay.hidden)setRunning(false);chooser.hidden=false;shell.hidden=true;overlay.scrollTop=0;overlay.setAttribute('aria-label','Choose a training program');renderProgramCards();requestAnimationFrame(()=>programGrid.querySelector('.program-card.selected,.program-card')?.focus())}
   function openLiveMode(event){returnFocus=event?.currentTarget||document.activeElement;overlay.hidden=false;document.body.classList.add('live-open');showChooser()}
   function closeLiveMode(){if(currentProgram)setRunning(false);overlay.hidden=true;document.body.classList.remove('live-open');document.title='Blueberry Ride — Five indoor-cycling programs';if(returnFocus&&typeof returnFocus.focus==='function')returnFocus.focus()}
 
-  volume.addEventListener('input',()=>{audio.volume=Number(volume.value)});audio.volume=Number(volume.value);
+  volume.addEventListener('input',()=>audioPlayer.setVolume(Number(volume.value)));audioPlayer.setVolume(Number(volume.value));
   open.addEventListener('click',openLiveMode);openQuick.addEventListener('click',openLiveMode);close.addEventListener('click',closeLiveMode);closeChooser.addEventListener('click',closeLiveMode);changeProgram.addEventListener('click',showChooser);
   document.querySelectorAll('[data-home-program]').forEach(card=>card.addEventListener('click',()=>{returnFocus=card;overlay.hidden=false;document.body.classList.add('live-open');selectProgram(card.dataset.homeProgram)}));
   overlay.addEventListener('keydown',event=>{if(event.key==='Escape'){closeLiveMode();return}if(event.key!=='Tab')return;const focusable=[...overlay.querySelectorAll('button:not([disabled]),a[href],input:not([type="file"]),[tabindex]:not([tabindex="-1"])')].filter(element=>element.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}});
