@@ -1,7 +1,7 @@
 (()=>{
   function createController(options={}){
     const audio=options.audio,onState=options.onState||(()=>{}),onCover=options.onCover||(()=>{}),onEnded=options.onEnded||(()=>{});
-    const now=options.now||(()=>globalThis.performance?.now?.()||Date.now()),raf=options.requestAnimationFrame||globalThis.requestAnimationFrame||((callback)=>setTimeout(callback,16)),fadeOutSeconds=Math.max(.1,Number(options.fadeOutSeconds)||2),fadeInMs=Math.max(100,Number(options.fadeInMs)||900);
+    const now=options.now||(()=>globalThis.performance?.now?.()||Date.now()),raf=options.requestAnimationFrame||globalThis.requestAnimationFrame||((callback)=>setTimeout(callback,16)),fadeOutSeconds=Math.max(.1,Number(options.fadeOutSeconds)||3),fadeInMs=Math.max(100,Number(options.fadeInMs)||2000);
     let sources=new Map(),currentKey='',requestId=0,baseVolume=Math.max(0,Math.min(1,Number(audio.volume)||.9)),boundaryRatio=1,fadeToken=0,fadingIn=false;
     const state=status=>onState({status,currentKey,currentTime:Number(audio.currentTime)||0,duration:Number(audio.duration)||0,paused:audio.paused});
     const sourceFor=(programId,index)=>sources.get(`${programId}:${index}`)||null;
@@ -39,7 +39,7 @@
       if(!source){cancelFade();audio.pause();restoreVolume();state('missing');return false}
       try{
         const switching=Boolean(currentKey)&&key!==currentKey&&shouldPlay;
-        if(key!==currentKey){cancelFade();audio.pause();currentKey=key;boundaryRatio=1;audio.volume=switching?0:baseVolume;audio.loop=true;audio.src=source.audioSrc;onCover(source.artworkSrc||null,source);audio.load();await metadata()}
+        if(key!==currentKey){cancelFade();if(switching)audio.volume=0;audio.pause();currentKey=key;boundaryRatio=1;audio.volume=switching?0:baseVolume;audio.loop=true;audio.src=source.audioSrc;onCover(source.artworkSrc||null,source);audio.load();await metadata()}
         if(request!==requestId)return false;
         seek(offset);
         if(shouldPlay)await audio.play();else audio.pause();

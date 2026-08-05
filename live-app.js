@@ -43,7 +43,7 @@
   audioPlayer.setSources(programs.flatMap(program=>program.tracks.map((track,index)=>({programId:program.id,index,audioSrc:track.audioSrc,artworkSrc:track.artworkSrc}))));
 
   function tone(freq=740,duration=.12,delay=0){try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain(),at=audioCtx.currentTime+delay;o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(.16,at+.015);g.gain.exponentialRampToValueAtTime(.0001,at+duration);o.connect(g).connect(audioCtx.destination);o.start(at);o.stop(at+duration+.02)}catch(e){}}
-  function transitionSignal(){tone(720,.12);tone(980,.18,.16);if(navigator.vibrate)navigator.vibrate([100,70,180]);overlay.classList.remove('countdown-flash');void overlay.offsetWidth;overlay.classList.add('countdown-flash')}
+  function transitionSignal(){if(navigator.vibrate)navigator.vibrate([100,70,180]);overlay.classList.remove('countdown-flash');void overlay.offsetWidth;overlay.classList.add('countdown-flash')}
   function locate(value){let rest=Math.max(0,Math.min(value,totalSeconds()));let nextIndex=0;while(nextIndex<ride.length-1&&rest>=ride[nextIndex].seconds){rest-=ride[nextIndex].seconds;nextIndex++}return{index:nextIndex,offset:Math.min(rest,ride[nextIndex]?.seconds||0)}}
   function reconcileClock(signal=false){if(!currentProgram)return false;const prior=index;elapsed=Math.min(elapsedNow(),totalSeconds());const located=locate(elapsed);index=located.index;offset=located.offset;if(elapsed>=totalSeconds()){running=false;audioPlayer.pause();releaseWakeLock()}const transitioned=index!==prior;if(transitioned&&signal)transitionSignal();return transitioned}
 

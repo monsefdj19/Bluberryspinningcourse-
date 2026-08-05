@@ -72,6 +72,9 @@ assert "if(!saved||typeof saved!=='object')" in live_app and 'safeStore' in live
 assert 'Spotify' not in live_app and 'spotify' not in live_app, 'Spotify runtime must be removed'
 assert 'LocalAudio.createController' in live_app and '.sync(' in live_app and '.setSources(' in live_app, 'hosted audio synchronization is missing'
 assert '.prepareBoundary(' in live_app and '.setVolume(' in live_app, 'smooth exercise-boundary audio transition is missing'
+assert 'tone(720' not in live_app and 'tone(980' not in live_app, 'song switches must not add an artificial transition tick'
+assert 'Number(options.fadeOutSeconds)||3' in local_audio and 'Number(options.fadeInMs)||2000' in local_audio, 'song switches must use the longer smooth fade defaults'
+assert 'if(switching)audio.volume=0;audio.pause()' in local_audio, 'the outgoing deck must reach silence before it is paused or replaced'
 assert "if(!ready){running=false" not in live_app, 'audio playback failure must not prevent the authoritative exercise timer from starting'
 assert 'setSources' in local_audio and 'createController' in local_audio
 assert "overlay.setAttribute('aria-label','Choose a training program')" in live_app, 'chooser dialog label is not restored'
@@ -79,6 +82,6 @@ assert "addEventListener('pageshow'" in live_app, 'pageshow reconciliation is mi
 assert 'if(response.ok&&!isMusic)' in service_worker and 'await cache.put' in service_worker, 'service worker must cache successful app assets while leaving large music network-loaded'
 assert './local-audio.js' in service_worker, 'local audio runtime must be cached'
 assert './hero-spin.jpg' not in service_worker, 'removed replacement cover must not block service-worker installation'
-assert "first-ride-live-v18" in service_worker, 'replacement-song release must ship under a fresh service-worker cache'
+assert "first-ride-live-v19" in service_worker, 'smooth-fade release must ship under a fresh service-worker cache'
 assert './test-art/' not in service_worker, 'obsolete shared program artwork must not remain in the app shell'
 print('five-program static contract: PASS')

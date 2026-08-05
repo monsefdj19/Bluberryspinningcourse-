@@ -86,8 +86,9 @@ try{
   await evaluate(`openLiveQuick.click();document.querySelector('[data-program="01"]').click();liveToggle.click()`);await wait(1600);
   state=await evaluate(`({count:liveCount.textContent,src:localAudio.currentSrc||localAudio.src,label:liveToggleLabel.textContent,volume:localAudio.volume,cover:localCover.getAttribute('src')})`);
   assert.equal(state.count,'Track 2 of 14','Automatic boundary must advance to track 2');assert.ok(state.src.endsWith('/music/01-02.mp3'));assert.equal(state.label,'Pause music + timer');
-  assert.ok(state.volume>.7,'the incoming song must finish its short fade-in at the instructor volume');
+  assert.ok(state.volume>.1&&state.volume<.8,'the incoming song must rise progressively during the longer fade-in');
   assert.equal(state.cover,'./artwork/01-02.jpg','automatic boundaries must update the album cover');
+  await wait(1200);state=await evaluate(`({volume:localAudio.volume,paused:localAudio.paused})`);assert.equal(state.paused,false);assert.ok(state.volume>.85,'the incoming song must finish at the instructor volume');
 
   console.log('live audio runtime contract: PASS');
 }finally{
