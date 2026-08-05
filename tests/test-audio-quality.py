@@ -10,10 +10,15 @@ files=sorted((root/'music').glob('*.mp3'))
 assert len(mapped)==64 and len(files)==64, f'expected 64 complete music tracks, found {len(files)}'
 assert set(mapped)==set(files), 'program music mapping and hosted files must match exactly'
 for file in files:
-    probe=subprocess.run(['ffprobe','-v','error','-show_entries','format=duration','-of','json',str(file)],capture_output=True,text=True,check=True)
-    duration=float(json.loads(probe.stdout)['format']['duration'])
+    probe=subprocess.run(['ffprobe','-v','error','-show_entries','format=duration:format_tags=title,artist','-of','json',str(file)],capture_output=True,text=True,check=True)
+    format_data=json.loads(probe.stdout)['format'];duration=float(format_data['duration']);tags=format_data.get('tags',{})
     assert duration>=90, f'{file.name} is not a complete track ({duration:.1f}s)'
-    if file.name=='03-01.mp3': assert duration>=165, f'{file.name} extended ride mix must cover the full 166-second block'
+    if file.name=='02-01.mp3':
+        assert duration>=194, f'{file.name} must cover the full 194-second block'
+        assert tags.get('title')=='Best Day Of My Life' and tags.get('artist')=='American Authors', f'{file.name} is not the supplied Rolling Hills opener'
+    if file.name=='03-01.mp3':
+        assert duration>=166, f'{file.name} must cover the full 166-second block'
+        assert tags.get('title')=='Physical' and tags.get('artist')=='Dua Lipa', f'{file.name} is not the supplied Dance Road opener'
     assert file.stat().st_size<100*1024*1024, f'{file.name} exceeds the GitHub single-file limit'
     run=subprocess.run(['ffmpeg','-hide_banner','-i',str(file),'-af','volumedetect','-f','null','-'],capture_output=True,text=True,check=True)
     mean=re.search(r'mean_volume:\s*(-?[0-9.]+) dB',run.stderr)

@@ -56,6 +56,9 @@ assert all((root / path.removeprefix('./')).is_file() for path in artwork), 'map
 assert all((root / path.removeprefix('./')).stat().st_size > 1000 for path in artwork), 'song artwork must contain a real image'
 assert './artwork/01-01.jpg' in html and './test-art/' not in html, 'initial player fallback must use the first song cover, not obsolete shared artwork'
 assert html.count('id="localAudio"') == 1 and 'local-player-foot' in html, 'song-cover fallback change must preserve the existing player markup'
+assert programs[1]['tracks'][0]['title'] == 'Best Day Of My Life' and programs[1]['tracks'][0]['artist'] == 'American Authors', 'Rolling Hills must open with the newly supplied American Authors track'
+assert programs[2]['tracks'][0]['title'] == 'Physical' and programs[2]['tracks'][0]['artist'] == 'Dua Lipa', 'Dance Road must open with the newly supplied Dua Lipa track'
+assert 'Blueberry Warm-Up' not in programs_js and 'Extended Ride Mix' not in programs_js, 'replaced fallback tracks must not remain in program data'
 assert len({t['audioSrc'] for p in programs for t in p['tracks']}) == 64
 assert all(all(t.get(field) for field in ('title', 'artist', 'exercise', 'rpm', 'rpe', 'position', 'resistance', 'pattern', 'cue')) for p in programs for t in p['tracks'])
 patterns=[t['pattern'].lower() for p in programs for t in p['tracks']]
@@ -76,6 +79,6 @@ assert "addEventListener('pageshow'" in live_app, 'pageshow reconciliation is mi
 assert 'if(response.ok&&!isMusic)' in service_worker and 'await cache.put' in service_worker, 'service worker must cache successful app assets while leaving large music network-loaded'
 assert './local-audio.js' in service_worker, 'local audio runtime must be cached'
 assert './hero-spin.jpg' not in service_worker, 'removed replacement cover must not block service-worker installation'
-assert "first-ride-live-v17" in service_worker, 'song-artwork and smooth-transition release must ship under a fresh service-worker cache'
+assert "first-ride-live-v18" in service_worker, 'replacement-song release must ship under a fresh service-worker cache'
 assert './test-art/' not in service_worker, 'obsolete shared program artwork must not remain in the app shell'
 print('five-program static contract: PASS')
