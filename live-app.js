@@ -50,16 +50,15 @@
   function renderProgramCards(){
     programGrid.innerHTML=programs.map(program=>{
       const selected=saved.programId===program.id;
-      return `<button class="program-card${selected?' selected':''}" type="button" data-program="${program.id}"><span class="program-number">${program.id}</span><span class="program-card-copy"><b>${program.name}</b><small>${program.objective}</small><em>${program.totalTime} · ${program.tracks.length} tracks${selected?' · Continue available':''}</em></span><span class="program-arrow" aria-hidden="true">→</span></button>`;
+      return `<button class="program-card${selected?' selected':''}" type="button" data-program="${program.id}"><span class="program-number">${program.id}</span><span class="program-card-copy"><b>${program.name}</b><small>${program.objective}</small><em>${program.totalTime} · ${program.tracks.length} tracks</em></span><span class="program-arrow" aria-hidden="true">→</span></button>`;
     }).join('');
     programGrid.querySelectorAll('.program-card').forEach(card=>card.addEventListener('click',()=>selectProgram(card.dataset.program)));
   }
 
   function selectProgram(id){
     const program=programs.find(item=>item.id===id);if(!program)return;
-    const continuing=saved.programId===id;
     currentProgram=program;ride=program.tracks;
-    elapsed=continuing?Math.min(Math.max(0,Number(saved.elapsed)||0),totalSeconds()):0;
+    elapsed=0;
     running=false;runningBaseElapsed=elapsed;runningStartedAt=0;lastSecond=-1;
     const located=locate(elapsed);index=located.index;offset=located.offset;
     saved={programId:id,elapsed};save();

@@ -45,6 +45,19 @@ try{
   let ready=false;
   for(let attempt=0;attempt<50;attempt++){try{ready=await evaluate(`document.readyState==='complete'&&Boolean(window.openLiveQuick)`);if(ready)break}catch{}await wait(100)}
   assert.equal(ready,true,'Reloaded application must become interactive');
+
+  const rhythmFirstSeconds=await evaluate(`TRAINING_PROGRAMS.find(program=>program.id==='01').tracks[0].seconds`);
+  await evaluate(`localStorage.setItem('firstRideLiveV5',JSON.stringify({version:5,programId:'01',elapsed:${rhythmFirstSeconds}-.5}));location.reload()`);await wait(900);
+  await evaluate(`document.querySelector('[data-home-program="01"]').click();liveToggle.click()`);await wait(1200);
+  let rhythmState=await evaluate(`({program:liveProgramTitle.textContent,count:liveCount.textContent,elapsed:elapsedTime.textContent,title:liveTrack.textContent,src:localAudio.currentSrc||localAudio.src,saved:JSON.parse(localStorage.getItem('firstRideLiveV5'))})`);
+  assert.equal(rhythmState.program,'Rhythm Ride','Starting Rhythm Ride must keep Rhythm Ride selected');
+  assert.equal(rhythmState.count,'Track 1 of 14','An explicit Rhythm Ride selection must start from its first exercise, not stale progress');
+  assert.ok(elapsedSeconds(rhythmState.elapsed)<=2,'Rhythm Ride must begin at the start of its own wall-clock timeline');
+  assert.equal(rhythmState.title,'Good to Go','Rhythm Ride must begin with its own first song');
+  assert.ok(rhythmState.src.endsWith('/music/01-01.mp3'),'Rhythm Ride must use its own first audio slot');
+  assert.equal(rhythmState.saved.programId,'01','Starting Rhythm Ride must persist the Rhythm Ride program id');
+  await evaluate(`liveToggle.click();localStorage.removeItem('firstRideLiveV5');location.reload()`);await wait(900);
+
   const landingTitle=await evaluate(`openLiveQuick.click();closeChooser.click();document.title`);
   assert.equal(landingTitle,'Blueberry Ride — Five indoor-cycling programs','Closing live mode must restore the rebranded landing title');
   await evaluate(`document.querySelector('[data-home-program="01"]').click()`);await wait(300);
@@ -82,10 +95,14 @@ try{
   state=await evaluate(`({elapsed:elapsedTime.textContent,label:liveToggleLabel.textContent})`);
   assert.ok(elapsedSeconds(state.elapsed)>=1,'Pending audio.play() must not stop the authoritative timer');assert.equal(state.label,'Pause music + timer');
 
-  await evaluate(`liveToggle.click();const first=TRAINING_PROGRAMS[0].tracks[0].seconds;localStorage.setItem('firstRideLiveV5',JSON.stringify({version:5,programId:'01',elapsed:first-0.5}));location.reload()`);await wait(900);
-  await evaluate(`openLiveQuick.click();document.querySelector('[data-program="01"]').click();liveToggle.click()`);await wait(1600);
-  state=await evaluate(`({count:liveCount.textContent,src:localAudio.currentSrc||localAudio.src,label:liveToggleLabel.textContent,volume:localAudio.volume,cover:localCover.getAttribute('src')})`);
+  await evaluate(`liveToggle.click();location.reload()`);await wait(900);
+  await evaluate(`openLiveQuick.click();document.querySelector('[data-program="01"]').click();liveToggle.click()`);await wait((rhythmFirstSeconds+1.6)*1000);
+  state=await evaluate(`({program:liveProgramTitle.textContent,count:liveCount.textContent,elapsed:elapsedTime.textContent,song:liveTrack.textContent,src:localAudio.currentSrc||localAudio.src,label:liveToggleLabel.textContent,volume:localAudio.volume,cover:localCover.getAttribute('src'),saved:JSON.parse(localStorage.getItem('firstRideLiveV5'))})`);
+  assert.equal(state.program,'Rhythm Ride','Automatic boundaries must stay inside Rhythm Ride');
   assert.equal(state.count,'Track 2 of 14','Automatic boundary must advance to track 2');assert.ok(state.src.endsWith('/music/01-02.mp3'));assert.equal(state.label,'Pause music + timer');
+  assert.ok(elapsedSeconds(state.elapsed)>=rhythmFirstSeconds&&elapsedSeconds(state.elapsed)<=rhythmFirstSeconds+2,'Track 2 must begin at the configured Rhythm Ride wall-clock boundary');
+  assert.equal(state.song,'I Feel Good','Track 2 must use the correct Rhythm Ride song');
+  assert.equal(state.saved.programId,'01','Automatic boundaries must not change the persisted program id');
   assert.ok(state.volume>.1&&state.volume<.8,'the incoming song must rise progressively during the longer fade-in');
   assert.equal(state.cover,'./artwork/01-02.jpg','automatic boundaries must update the album cover');
   await wait(1200);state=await evaluate(`({volume:localAudio.volume,paused:localAudio.paused})`);assert.equal(state.paused,false);assert.ok(state.volume>.85,'the incoming song must finish at the instructor volume');
