@@ -56,6 +56,7 @@
   }
 
   function selectProgram(id){
+    if(running)return false;
     const program=programs.find(item=>item.id===id);if(!program)return;
     currentProgram=program;ride=program.tracks;
     elapsed=0;

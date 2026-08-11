@@ -82,6 +82,6 @@ assert "addEventListener('pageshow'" in live_app, 'pageshow reconciliation is mi
 assert 'if(response.ok&&!isMusic)' in service_worker and 'await cache.put' in service_worker, 'service worker must cache successful app assets while leaving large music network-loaded'
 assert './local-audio.js' in service_worker, 'local audio runtime must be cached'
 assert './hero-spin.jpg' not in service_worker, 'removed replacement cover must not block service-worker installation'
-assert "first-ride-live-v20" in service_worker, 'Rhythm Ride isolation release must ship under a fresh service-worker cache'
+assert "first-ride-live-v21" in service_worker, 'active-program lock release must ship under a fresh service-worker cache'
 assert './test-art/' not in service_worker, 'obsolete shared program artwork must not remain in the app shell'
 print('five-program static contract: PASS')

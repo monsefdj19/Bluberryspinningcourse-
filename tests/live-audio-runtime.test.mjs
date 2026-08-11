@@ -70,6 +70,17 @@ try{
   assert.equal(state.cover,'./artwork/01-01.jpg','the player must show the current song album cover');
   assert.ok(state.coverWidth>0&&state.coverHeight>0,'the current song album cover must load as a real image');
 
+  const runningElapsed=elapsedSeconds(state.elapsed);
+  await evaluate(`document.querySelector('[data-home-program="02"]').click()`);await wait(1200);
+  state=await evaluate(`({program:liveProgramTitle.textContent,count:liveCount.textContent,elapsed:elapsedTime.textContent,song:liveTrack.textContent,src:localAudio.currentSrc||localAudio.src,label:liveToggleLabel.textContent,saved:JSON.parse(localStorage.getItem('firstRideLiveV5'))})`);
+  assert.equal(state.program,'Rhythm Ride','A running ride must reject accidental selection of another program');
+  assert.equal(state.count,'Track 1 of 14','The active Rhythm Ride plan must remain locked while playing');
+  assert.ok(elapsedSeconds(state.elapsed)>runningElapsed,'Rejected program changes must not interrupt the active timer');
+  assert.equal(state.song,'Good to Go','The active Rhythm Ride song must remain locked while playing');
+  assert.ok(state.src.endsWith('/music/01-01.mp3'),'The active audio source must remain inside Rhythm Ride');
+  assert.equal(state.label,'Pause music + timer','The active ride must remain running');
+  assert.equal(state.saved.programId,'01','Rejected program changes must not overwrite persisted program state');
+
   await evaluate(`liveToggle.click()`);await wait(250);const pausedAt=await evaluate(`elapsedTime.textContent`);await wait(1100);
   state=await evaluate(`({elapsed:elapsedTime.textContent,paused:localAudio.paused})`);
   assert.equal(state.elapsed,pausedAt,'Pause must freeze the timer');assert.equal(state.paused,true,'Pause must pause audio');
