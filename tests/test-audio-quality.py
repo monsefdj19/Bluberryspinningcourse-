@@ -7,8 +7,10 @@ program_text=(root/'programs.js').read_text()
 programs=json.loads(program_text.split('=',1)[1].rsplit(';',1)[0])
 mapped=[root/track['audioSrc'].removeprefix('./') for program in programs for track in program['tracks']]
 files=sorted((root/'music').glob('*.mp3'))
-assert len(mapped)==64 and len(files)==64, f'expected 64 complete music tracks, found {len(files)}'
+assert len(mapped)==65 and len(files)==65, f'expected 65 complete music tracks, found {len(files)}'
 assert set(mapped)==set(files), 'program music mapping and hosted files must match exactly'
+program4=next(program for program in programs if program['id']=='04')
+program4_tracks={Path(track['audioSrc']).name:track for track in program4['tracks']}
 for file in files:
     probe=subprocess.run(['ffprobe','-v','error','-show_entries','format=duration:format_tags=title,artist','-of','json',str(file)],capture_output=True,text=True,check=True)
     format_data=json.loads(probe.stdout)['format'];duration=float(format_data['duration']);tags=format_data.get('tags',{})
@@ -19,6 +21,10 @@ for file in files:
     if file.name=='03-01.mp3':
         assert duration>=166, f'{file.name} must cover the full 166-second block'
         assert tags.get('title')=='Physical' and tags.get('artist')=='Dua Lipa', f'{file.name} is not the supplied Dance Road opener'
+    if file.name in program4_tracks:
+        track=program4_tracks[file.name]
+        assert duration>=track['seconds']+3, f'{file.name} must preserve a three-second outgoing fade tail'
+        assert tags.get('title')==track['title'] and tags.get('artist')==track['artist'], f'{file.name} metadata does not match Program 4'
     assert file.stat().st_size<100*1024*1024, f'{file.name} exceeds the GitHub single-file limit'
     run=subprocess.run(['ffmpeg','-hide_banner','-i',str(file),'-af','volumedetect','-f','null','-'],capture_output=True,text=True,check=True)
     mean=re.search(r'mean_volume:\s*(-?[0-9.]+) dB',run.stderr)

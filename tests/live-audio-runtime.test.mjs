@@ -118,6 +118,23 @@ try{
   assert.equal(state.cover,'./artwork/01-02.jpg','automatic boundaries must update the album cover');
   await wait(1200);state=await evaluate(`({volume:localAudio.volume,paused:localAudio.paused})`);assert.equal(state.paused,false);assert.ok(state.volume>.85,'the incoming song must finish at the instructor volume');
 
+  await evaluate(`changeProgram.click();document.querySelector('[data-program="04"]').click()`);await wait(350);
+  const program4FirstSeconds=await evaluate(`TRAINING_PROGRAMS.find(program=>program.id==='04').tracks[0].seconds`);
+  state=await evaluate(`({program:liveProgramTitle.textContent,count:liveCount.textContent,elapsed:elapsedTime.textContent,song:liveTrack.textContent,artist:liveArtist.textContent,src:localAudio.currentSrc||localAudio.src,cover:localCover.getAttribute('src')})`);
+  assert.equal(state.program,'Throwback Power');assert.equal(state.count,'Track 1 of 13');assert.equal(state.elapsed,'00:00');
+  assert.equal(state.song,"Don't Stop The Music");assert.equal(state.artist,'Crystal Rock, CALVO & DAZZ');assert.ok(state.src.endsWith('/music/04-01.mp3'));assert.equal(state.cover,'./artwork/04-01.jpg');
+
+  await evaluate(`window.__realDateNow=Date.now;window.__fakeNow=Date.now();Date.now=()=>window.__fakeNow;liveToggle.click()`);await wait(500);
+  await evaluate(`document.querySelector('[data-home-program="05"]').click()`);await wait(250);
+  state=await evaluate(`({program:liveProgramTitle.textContent,count:liveCount.textContent,song:liveTrack.textContent,saved:JSON.parse(localStorage.getItem('firstRideLiveV5'))})`);
+  assert.equal(state.program,'Throwback Power','Program 4 must remain locked while running');assert.equal(state.count,'Track 1 of 13');assert.equal(state.song,"Don't Stop The Music");assert.equal(state.saved.programId,'04');
+
+  await evaluate(`window.__fakeNow+=${(program4FirstSeconds+1)*1000};dispatchEvent(new Event('focus'))`);await wait(350);
+  state=await evaluate(`({program:liveProgramTitle.textContent,count:liveCount.textContent,elapsed:elapsedTime.textContent,song:liveTrack.textContent,artist:liveArtist.textContent,src:localAudio.currentSrc||localAudio.src,cover:localCover.getAttribute('src'),saved:JSON.parse(localStorage.getItem('firstRideLiveV5'))})`);
+  assert.equal(state.program,'Throwback Power','Program 4 automatic boundaries must stay in Program 4');assert.equal(state.count,'Track 2 of 13');assert.ok(elapsedSeconds(state.elapsed)>=program4FirstSeconds);
+  assert.equal(state.song,'Wake Me Up Before You Go-Go');assert.equal(state.artist,'Wham!');assert.ok(state.src.endsWith('/music/04-02.mp3'));assert.equal(state.cover,'./artwork/04-02.jpg');assert.equal(state.saved.programId,'04');
+  await evaluate(`liveToggle.click();Date.now=window.__realDateNow`);
+
   console.log('live audio runtime contract: PASS');
 }finally{
   try{ws?.close()}catch{}
