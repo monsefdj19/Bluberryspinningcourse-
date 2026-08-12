@@ -102,7 +102,7 @@ try{
   state=await evaluate(`({src:localAudio.currentSrc||localAudio.src,paused:localAudio.paused,count:liveCount.textContent})`);
   assert.ok(state.src.endsWith('/music/01-03.mp3'));assert.equal(state.paused,false);assert.equal(state.count,'Track 3 of 14');
 
-  await evaluate(`changeProgram.click();document.querySelector('[data-program="02"]').click()`);await wait(300);
+  await evaluate(`closeLive.click();openLiveQuick.click();document.querySelector('[data-program="02"]').click()`);await wait(300);
   state=await evaluate(`({program:liveProgramTitle.textContent,src:localAudio.currentSrc||localAudio.src,paused:localAudio.paused,elapsed:elapsedTime.textContent})`);
   assert.equal(state.program,'Rolling Hills and Recoveries');assert.ok(state.src.endsWith('/music/02-01.mp3'));assert.equal(state.paused,true);assert.equal(state.elapsed,'00:00');
 
@@ -126,7 +126,7 @@ try{
   assert.equal(state.cover,'./artwork/01-02.jpg','automatic boundaries must update the album cover');
   await wait(1200);state=await evaluate(`({volume:localAudio.volume,paused:localAudio.paused})`);assert.equal(state.paused,false);assert.ok(state.volume>.85,'the incoming song must finish at the instructor volume');
 
-  await evaluate(`changeProgram.click();document.querySelector('[data-program="04"]').click()`);await wait(350);
+  await evaluate(`closeLive.click();openLiveQuick.click();document.querySelector('[data-program="04"]').click()`);await wait(350);
   const program4FirstSeconds=await evaluate(`TRAINING_PROGRAMS.find(program=>program.id==='04').tracks[0].seconds`);
   state=await evaluate(`({program:liveProgramTitle.textContent,count:liveCount.textContent,elapsed:elapsedTime.textContent,song:liveTrack.textContent,artist:liveArtist.textContent,src:localAudio.currentSrc||localAudio.src,cover:localCover.getAttribute('src')})`);
   assert.equal(state.program,'Throwback Power');assert.equal(state.count,'Track 1 of 13');assert.equal(state.elapsed,'00:00');

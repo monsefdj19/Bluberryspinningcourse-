@@ -3,7 +3,7 @@
   const programs=Array.isArray(window.TRAINING_PROGRAMS)?window.TRAINING_PROGRAMS.map(program=>({...program,tracks:program.tracks.map((track,index)=>({...track,artworkSrc:songArtwork(program.id,index)}))})):[];
   const $=id=>document.getElementById(id);
   const overlay=$('liveOverlay'),chooser=$('programChooser'),programGrid=$('programGrid'),shell=$('liveShell');
-  const openQuick=$('openLiveQuick'),close=$('closeLive'),closeChooser=$('closeChooser'),changeProgram=$('changeProgram');
+  const openQuick=$('openLiveQuick'),close=$('closeLive'),closeChooser=$('closeChooser');
   const toggle=$('liveToggle'),toggleIcon=$('liveToggleIcon'),toggleLabel=$('liveToggleLabel'),prev=$('livePrev'),next=$('liveNext'),queue=$('liveQueue'),liveReset=$('liveReset');
   const audio=$('localAudio'),audioState=$('localAudioState'),audioTime=$('localAudioTime'),audioBar=$('localAudioBar'),cover=$('localCover'),coverFallback=$('localCoverFallback'),volume=$('localVolume');
   const liveKey='firstRideLiveV5';
@@ -117,7 +117,7 @@
   function closeLiveMode(){if(currentProgram)setRunning(false);overlay.hidden=true;document.body.classList.remove('live-open');document.title='Blueberry Ride — Five indoor-cycling programs';if(returnFocus&&typeof returnFocus.focus==='function')returnFocus.focus()}
 
   volume.addEventListener('input',()=>audioPlayer.setVolume(Number(volume.value)));audioPlayer.setVolume(Number(volume.value));
-  openQuick.addEventListener('click',openLiveMode);close.addEventListener('click',closeLiveMode);closeChooser.addEventListener('click',closeLiveMode);changeProgram.addEventListener('click',showChooser);
+  openQuick.addEventListener('click',openLiveMode);close.addEventListener('click',closeLiveMode);closeChooser.addEventListener('click',closeLiveMode);
   document.querySelectorAll('[data-home-program]').forEach(card=>card.addEventListener('click',()=>{returnFocus=card;overlay.hidden=false;document.body.classList.add('live-open');selectProgram(card.dataset.homeProgram)}));
   overlay.addEventListener('keydown',event=>{if(event.key==='Escape'){closeLiveMode();return}if(event.key!=='Tab')return;const focusable=[...overlay.querySelectorAll('button:not([disabled]),a[href],input:not([type="file"]),[tabindex]:not([tabindex="-1"])')].filter(element=>element.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}});
   toggle.addEventListener('click',()=>setRunning(!running));prev.addEventListener('click',()=>offset>8?setElapsed(before(index)):jump(index-1));next.addEventListener('click',()=>advance(false));

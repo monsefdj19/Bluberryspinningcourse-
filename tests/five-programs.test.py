@@ -11,7 +11,7 @@ local_audio = (root / 'local-audio.js').read_text(encoding='utf-8') if (root / '
 
 assert 'id="programChooser"' in html, 'program chooser is missing'
 assert 'id="liveProgramTitle"' in html, 'persistent selected-program title is missing'
-assert 'id="changeProgram"' in html, 'change-program control is missing'
+assert 'id="changeProgram"' not in html, 'live mode must exit before choosing another program'
 assert '<script src="programs.js"></script>' in html, 'program data script is missing'
 assert '<script src="local-audio.js"></script>' in html, 'local audio script is missing'
 assert html.index('<script src="local-audio.js"></script>') < html.index('<script src="live-app.js"></script>')
@@ -115,6 +115,6 @@ assert "addEventListener('pageshow'" in live_app, 'pageshow reconciliation is mi
 assert 'if(response.ok&&!isMusic)' in service_worker and 'await cache.put' in service_worker, 'service worker must cache successful app assets while leaving large music network-loaded'
 assert './local-audio.js' in service_worker, 'local audio runtime must be cached'
 assert './hero-spin.jpg' not in service_worker, 'removed replacement cover must not block service-worker installation'
-assert "first-ride-live-v24" in service_worker, 'mobile live-console polish must ship under a fresh service-worker cache'
+assert "first-ride-live-v25" in service_worker, 'phone-first live-console composition must ship under a fresh service-worker cache'
 assert './test-art/' not in service_worker, 'obsolete shared program artwork must not remain in the app shell'
 print('five-program static contract: PASS')
