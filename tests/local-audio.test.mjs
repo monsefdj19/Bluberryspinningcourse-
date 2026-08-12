@@ -12,7 +12,15 @@ assert.ok(api,'LocalAudio API must be exposed');
 
 const tracks=[
   {programId:'01',index:0,audioSrc:'./test-audio/01-01.mp3',artworkSrc:'./test-art/01.svg'},
+  {programId:'01',index:1,audioSrc:'./test-audio/01-02.mp3',artworkSrc:'./test-art/01.svg'},
   {programId:'02',index:12,audioSrc:'./test-audio/02-13.mp3',artworkSrc:'./test-art/02.svg'},
+  {programId:'02',index:13,audioSrc:'./test-audio/02-14.mp3',artworkSrc:'./test-art/02.svg'},
+  {programId:'03',index:0,audioSrc:'./test-audio/03-01.mp3',artworkSrc:'./test-art/03.svg'},
+  {programId:'03',index:1,audioSrc:'./test-audio/03-02.mp3',artworkSrc:'./test-art/03.svg'},
+  {programId:'04',index:0,audioSrc:'./test-audio/04-01.mp3',artworkSrc:'./test-art/04.svg'},
+  {programId:'04',index:1,audioSrc:'./test-audio/04-02.mp3',artworkSrc:'./test-art/04.svg'},
+  {programId:'05',index:0,audioSrc:'./test-audio/05-01.mp3',artworkSrc:'./test-art/05.svg'},
+  {programId:'05',index:1,audioSrc:'./test-audio/05-02.mp3',artworkSrc:'./test-art/05.svg'},
 ];
 
 class FakeAudio{
@@ -48,7 +56,7 @@ const beforeRetry=audio.loadCount;
 audio.emit('error');
 await controller.sync('02',12,4,false);
 assert.equal(audio.loadCount,beforeRetry+1,'retrying an errored track must reload its source');
-assert.equal(await controller.load('05',0,0,true),false);
+assert.equal(await controller.load('99',0,0,true),false);
 assert.equal(states.at(-1).status,'missing');
 
 const delayedAudio=new FakeAudio(),delayedStates=[];
@@ -87,5 +95,25 @@ now=500;frames.shift()();
 assert.equal(transitionAudio.volume,.4,'the incoming song must fade in progressively');
 now=1000;frames.shift()();
 assert.equal(transitionAudio.volume,.8,'the incoming song must return to the instructor volume');
+
+for(const programId of ['01','02','03','04','05']){
+  now=0;frames.length=0;
+  const playlistAudio=new FakeAudio();playlistAudio.volume=.9;
+  const playlistController=api.createController({audio:playlistAudio,now:()=>now,requestAnimationFrame:callback=>{frames.push(callback);return frames.length},fadeOutSeconds:2,fadeInMs:1000});
+  playlistController.setSources(tracks);
+  const firstIndex=programId==='02'?12:0,nextIndex=firstIndex+1;
+  await playlistController.load(programId,firstIndex,0,true);
+  playlistController.setVolume(.6);
+  assert.equal(playlistAudio.volume,.6,`Program ${programId} volume slider target must apply immediately`);
+  playlistController.prepareBoundary(1);
+  assert.equal(playlistAudio.volume,.3,`Program ${programId} must fade out before its boundary`);
+  await playlistController.load(programId,nextIndex,0,true);
+  assert.equal(playlistAudio.volume,0,`Program ${programId} transition must load the incoming track silently`);
+  playlistController.setVolume(.4);
+  now=500;frames.shift()();
+  assert.equal(playlistAudio.volume,.2,`Program ${programId} slider change must retarget an active fade`);
+  now=1000;frames.shift()();
+  assert.equal(playlistAudio.volume,.4,`Program ${programId} fade must finish at the selected slider volume`);
+}
 
 console.log('hosted-audio contract: PASS');
