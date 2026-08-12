@@ -73,7 +73,9 @@ try{
   assert.equal(state.cover,'./artwork/01-01.jpg','the player must show the current song album cover');
   assert.ok(state.coverWidth>0&&state.coverHeight>0,'the current song album cover must load as a real image');
   assert.equal(await evaluate(`localAudio.loop`),false,'the browser audio element must never loop a complete song');
-  assert.equal(await evaluate(`mobileExerciseName.textContent`),'Easy seated warm-up','mobile instructor context must follow the active exercise');
+  assert.equal(await evaluate(`document.querySelectorAll('#liveExercise').length`),1,'the active exercise title must appear only once');
+  assert.equal(await evaluate(`document.querySelectorAll('.prescription-icon').length`),3,'position, resistance, and pattern need distinct icons');
+  assert.equal(await evaluate(`document.querySelectorAll('.metric-icon').length`),2,'RPM and RPE need distinct icons');
   assert.equal(await evaluate(`liveOverlay.scrollTop`),0,'entering a ride must not jump a narrow instructor view down to the queue');
 
   const runningElapsed=elapsedSeconds(state.elapsed);
