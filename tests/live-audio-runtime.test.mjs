@@ -45,9 +45,9 @@ try{
   let ready=false;
   for(let attempt=0;attempt<50;attempt++){try{ready=await evaluate(`document.readyState==='complete'&&Boolean(window.openLiveQuick)`);if(ready)break}catch{}await wait(100)}
   assert.equal(ready,true,'Reloaded application must become interactive');
-  const onboarding=await evaluate(`({steps:[...document.querySelectorAll('.first-visit-step b')].map(node=>node.textContent.trim()),flowButton:Boolean(openLiveFlow),guideScope:document.querySelector('.guide-context p')?.textContent,resetHidden:resetProgress.hidden})`);
+  const onboarding=await evaluate(`({steps:[...document.querySelectorAll('.first-visit-step b')].map(node=>node.textContent.trim()),chooserButtons:document.querySelectorAll('#openLiveQuick').length,redundantLaunchers:document.querySelectorAll('#openLive, #openLiveFlow, .home-secondary').length,guideScope:document.querySelector('.guide-context p')?.textContent,resetHidden:resetProgress.hidden})`);
   assert.deepEqual(onboarding.steps,['1Prepare','2Rehearse','3Teach'],'fresh visitors must see the complete Prepare, Rehearse, Teach path');
-  assert.equal(onboarding.flowButton,true,'first-visit guidance must open the chooser');assert.match(onboarding.guideScope,/uses Rhythm Ride as the rehearsal example/);assert.equal(onboarding.resetHidden,true,'Reset must stay hidden when there is no saved progress');
+  assert.equal(onboarding.chooserButtons,1,'the landing page must expose one primary program chooser');assert.equal(onboarding.redundantLaunchers,0,'redundant chooser and explore controls must be removed');assert.match(onboarding.guideScope,/uses Rhythm Ride as the rehearsal example/);assert.equal(onboarding.resetHidden,true,'Reset must stay hidden when there is no saved progress');
 
   const rhythmFirstSeconds=await evaluate(`TRAINING_PROGRAMS.find(program=>program.id==='01').tracks[0].seconds`);
   await evaluate(`localStorage.setItem('firstRideLiveV5',JSON.stringify({version:5,programId:'01',elapsed:${rhythmFirstSeconds}-.5}));location.reload()`);await wait(900);
