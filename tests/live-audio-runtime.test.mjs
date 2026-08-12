@@ -45,6 +45,9 @@ try{
   let ready=false;
   for(let attempt=0;attempt<50;attempt++){try{ready=await evaluate(`document.readyState==='complete'&&Boolean(window.openLiveQuick)`);if(ready)break}catch{}await wait(100)}
   assert.equal(ready,true,'Reloaded application must become interactive');
+  const onboarding=await evaluate(`({steps:[...document.querySelectorAll('.first-visit-step b')].map(node=>node.textContent.trim()),flowButton:Boolean(openLiveFlow),guideScope:document.querySelector('.guide-context p')?.textContent,resetHidden:resetProgress.hidden})`);
+  assert.deepEqual(onboarding.steps,['1Prepare','2Rehearse','3Teach'],'fresh visitors must see the complete Prepare, Rehearse, Teach path');
+  assert.equal(onboarding.flowButton,true,'first-visit guidance must open the chooser');assert.match(onboarding.guideScope,/uses Rhythm Ride as the rehearsal example/);assert.equal(onboarding.resetHidden,true,'Reset must stay hidden when there is no saved progress');
 
   const rhythmFirstSeconds=await evaluate(`TRAINING_PROGRAMS.find(program=>program.id==='01').tracks[0].seconds`);
   await evaluate(`localStorage.setItem('firstRideLiveV5',JSON.stringify({version:5,programId:'01',elapsed:${rhythmFirstSeconds}-.5}));location.reload()`);await wait(900);
@@ -69,6 +72,9 @@ try{
   assert.match(state.audioTime,/^\d{2}:\d{2} \/ \d{2}:\d{2}$/,'full-track player must show current and total time');
   assert.equal(state.cover,'./artwork/01-01.jpg','the player must show the current song album cover');
   assert.ok(state.coverWidth>0&&state.coverHeight>0,'the current song album cover must load as a real image');
+  assert.equal(await evaluate(`localAudio.loop`),false,'the browser audio element must never loop a complete song');
+  assert.equal(await evaluate(`mobileExerciseName.textContent`),'Easy seated warm-up','mobile instructor context must follow the active exercise');
+  assert.equal(await evaluate(`liveOverlay.scrollTop`),0,'entering a ride must not jump a narrow instructor view down to the queue');
 
   const runningElapsed=elapsedSeconds(state.elapsed);
   await evaluate(`document.querySelector('[data-home-program="02"]').click()`);await wait(1200);

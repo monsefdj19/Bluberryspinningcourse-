@@ -3,7 +3,7 @@
   const programs=Array.isArray(window.TRAINING_PROGRAMS)?window.TRAINING_PROGRAMS.map(program=>({...program,tracks:program.tracks.map((track,index)=>({...track,artworkSrc:songArtwork(program.id,index)}))})):[];
   const $=id=>document.getElementById(id);
   const overlay=$('liveOverlay'),chooser=$('programChooser'),programGrid=$('programGrid'),shell=$('liveShell');
-  const open=$('openLive'),openQuick=$('openLiveQuick'),close=$('closeLive'),closeChooser=$('closeChooser'),changeProgram=$('changeProgram');
+  const open=$('openLive'),openQuick=$('openLiveQuick'),openFlow=$('openLiveFlow'),close=$('closeLive'),closeChooser=$('closeChooser'),changeProgram=$('changeProgram');
   const toggle=$('liveToggle'),toggleIcon=$('liveToggleIcon'),toggleLabel=$('liveToggleLabel'),prev=$('livePrev'),next=$('liveNext'),queue=$('liveQueue'),liveReset=$('liveReset');
   const audio=$('localAudio'),audioState=$('localAudioState'),audioTime=$('localAudioTime'),audioBar=$('localAudioBar'),cover=$('localCover'),coverFallback=$('localCoverFallback'),volume=$('localVolume');
   const liveKey='firstRideLiveV5';
@@ -50,7 +50,8 @@
   function renderProgramCards(){
     programGrid.innerHTML=programs.map(program=>{
       const selected=saved.programId===program.id;
-      return `<button class="program-card${selected?' selected':''}" type="button" data-program="${program.id}"><span class="program-number">${program.id}</span><span class="program-card-copy"><b>${program.name}</b><small>${program.objective}</small><em>${program.totalTime} · ${program.tracks.length} tracks</em></span><span class="program-arrow" aria-hidden="true">→</span></button>`;
+      const fits={"01":"Recommended first ride · balanced","02":"Climb focus · moderate","03":"High-energy · faster cadence","04":"Throwbacks · mixed terrain","05":"Global pop · celebratory"};
+      return `<button class="program-card${selected?' selected':''}" type="button" data-program="${program.id}"><span class="program-number">${program.id}</span><span class="program-card-copy"><b>${program.name}</b><small>${program.objective}</small><em>${fits[program.id]} · ${program.totalTime} · ${program.tracks.length} tracks</em></span><span class="program-arrow" aria-hidden="true">→</span></button>`;
     }).join('');
     programGrid.querySelectorAll('.program-card').forEach(card=>card.addEventListener('click',()=>selectProgram(card.dataset.program)));
   }
@@ -66,7 +67,7 @@
     $('liveProgramTitle').textContent=program.name;
     overlay.setAttribute('aria-label',`${program.name} live instructor console`);
     chooser.hidden=true;shell.hidden=false;overlay.scrollTop=0;
-    buildQueue();render();syncAudio(false);requestAnimationFrame(()=>toggle.focus());
+    buildQueue();render();syncAudio(false);requestAnimationFrame(()=>{toggle.focus({preventScroll:true});overlay.scrollTop=0});
   }
 
   function buildQueue(){queue.innerHTML=ride.map((track,i)=>`<button class="queue-item" type="button" data-i="${i}"><span class="queue-no">${String(i+1).padStart(2,'0')}</span><b>${track.exercise}</b><small>${fmt(track.seconds)}</small></button>`).join('');queue.querySelectorAll('.queue-item').forEach(item=>item.addEventListener('click',()=>jump(Number(item.dataset.i))))}
@@ -81,12 +82,12 @@
     const track=ride[index],upNext=ride[index+1],remaining=Math.max(0,track.seconds-offset),sessionElapsed=Math.min(elapsed,totalSeconds());
     $('liveProgramTitle').textContent=currentProgram.name;
     $('livePhase').textContent=remaining<=10&&running?`Next in ${Math.ceil(remaining)} sec`:track.phase;
-    $('liveCount').textContent=`Track ${index+1} of ${ride.length}`;$('liveExercise').textContent=track.exercise;$('liveCue').textContent=track.cue;$('livePosition').textContent=track.position;$('liveResistance').textContent=track.resistance;$('livePattern').textContent=track.pattern;$('liveRpm').textContent=track.rpm;$('liveRpe').textContent=track.rpe;$('liveTrack').textContent=track.title;$('liveArtist').textContent=track.artist;$('localAudioTitle').textContent=track.title;$('localAudioArtist').textContent=track.artist;
+    $('liveCount').textContent=`Track ${index+1} of ${ride.length}`;$('liveExercise').textContent=track.exercise;$('liveCue').textContent=track.cue;$('livePosition').textContent=track.position;$('liveResistance').textContent=track.resistance;$('livePattern').textContent=track.pattern;$('liveRpm').textContent=track.rpm;$('liveRpe').textContent=track.rpe;$('mobileExerciseName').textContent=track.exercise;$('mobileExerciseMeta').textContent=`${track.rpm} RPM · RPE ${track.rpe}`;$('liveTrack').textContent=track.title;$('liveArtist').textContent=track.artist;$('localAudioTitle').textContent=track.title;$('localAudioArtist').textContent=track.artist;
     $('elapsedTime').textContent=fmt(sessionElapsed);$('remainingTime').textContent=fmt(Math.ceil(remaining));$('liveBar').style.width=`${Math.min(100,(offset/track.seconds)*100)}%`;
     $('nextExercise').textContent=upNext?upNext.exercise:'Ride complete';$('nextMeta').textContent=upNext?`${upNext.title} · ${upNext.rpm} RPM · RPE ${upNext.rpe}`:'Cooldown complete · hydrate and thank the room';
     toggleIcon.textContent=running?'Ⅱ':'▶';toggleLabel.textContent=running?'Pause music + timer':'Start music + timer';toggle.setAttribute('aria-label',running?'Pause music and timer':'Start music and timer');prev.disabled=index===0&&offset<1;next.textContent=index===ride.length-1?'Finish ✓':'Next →';
     queue.querySelectorAll('.queue-item').forEach((item,i)=>{item.classList.toggle('done',i<index);item.classList.toggle('current',i===index)});
-    const current=queue.querySelector('.queue-item.current');if(current&&!current.dataset.seen){queue.querySelectorAll('.queue-item').forEach(item=>delete item.dataset.seen);current.dataset.seen='1';current.scrollIntoView({block:'nearest'})}
+    const current=queue.querySelector('.queue-item.current');if(current&&!current.dataset.seen){queue.querySelectorAll('.queue-item').forEach(item=>delete item.dataset.seen);current.dataset.seen='1';if(matchMedia('(min-width:821px)').matches)current.scrollIntoView({block:'nearest'})}
     document.title=running?`${fmt(Math.ceil(remaining))} · ${currentProgram.name} · ${track.exercise}`:`${currentProgram.name} — paused`;
     updateMediaSession();
   }
@@ -116,15 +117,15 @@
   function closeLiveMode(){if(currentProgram)setRunning(false);overlay.hidden=true;document.body.classList.remove('live-open');document.title='Blueberry Ride — Five indoor-cycling programs';if(returnFocus&&typeof returnFocus.focus==='function')returnFocus.focus()}
 
   volume.addEventListener('input',()=>audioPlayer.setVolume(Number(volume.value)));audioPlayer.setVolume(Number(volume.value));
-  open.addEventListener('click',openLiveMode);openQuick.addEventListener('click',openLiveMode);close.addEventListener('click',closeLiveMode);closeChooser.addEventListener('click',closeLiveMode);changeProgram.addEventListener('click',showChooser);
+  open.addEventListener('click',openLiveMode);openQuick.addEventListener('click',openLiveMode);openFlow.addEventListener('click',openLiveMode);close.addEventListener('click',closeLiveMode);closeChooser.addEventListener('click',closeLiveMode);changeProgram.addEventListener('click',showChooser);
   document.querySelectorAll('[data-home-program]').forEach(card=>card.addEventListener('click',()=>{returnFocus=card;overlay.hidden=false;document.body.classList.add('live-open');selectProgram(card.dataset.homeProgram)}));
   overlay.addEventListener('keydown',event=>{if(event.key==='Escape'){closeLiveMode();return}if(event.key!=='Tab')return;const focusable=[...overlay.querySelectorAll('button:not([disabled]),a[href],input:not([type="file"]),[tabindex]:not([tabindex="-1"])')].filter(element=>element.getClientRects().length);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}});
   toggle.addEventListener('click',()=>setRunning(!running));prev.addEventListener('click',()=>offset>8?setElapsed(before(index)):jump(index-1));next.addEventListener('click',()=>advance(false));
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&running){reconcileClock(true);render();syncAudio(true);requestWakeLock()}});
   addEventListener('pageshow',()=>{if(running){reconcileClock(true);render();syncAudio(true)}});
   addEventListener('focus',()=>{if(running){reconcileClock(true);render();syncAudio(true)}});
-  function resetLiveSession(){if(!currentProgram)return;setRunning(false);elapsed=0;runningBaseElapsed=0;runningStartedAt=0;index=0;offset=0;lastSecond=-1;save();render();syncAudio(false);queue.scrollTo({top:0,behavior:'smooth'})}
+  function resetLiveSession(){if(!currentProgram)return false;if(elapsedNow()>0&&!confirm(`Start ${currentProgram.name} over from 00:00?`))return false;setRunning(false);elapsed=0;runningBaseElapsed=0;runningStartedAt=0;index=0;offset=0;lastSecond=-1;save();render();syncAudio(false);queue.scrollTo({top:0,behavior:'smooth'});$('resetProgress').hidden=true;return true}
   liveReset.addEventListener('click',resetLiveSession);$('resetProgress').addEventListener('click',resetLiveSession);
   if('mediaSession'in navigator){try{navigator.mediaSession.setActionHandler('play',()=>setRunning(true));navigator.mediaSession.setActionHandler('pause',()=>setRunning(false));navigator.mediaSession.setActionHandler('previoustrack',()=>jump(index-1));navigator.mediaSession.setActionHandler('nexttrack',()=>advance(false))}catch(e){}}
-  renderProgramCards();requestAnimationFrame(tick);
+  $('resetProgress').hidden=!(saved.programId&&Number(saved.elapsed)>0);renderProgramCards();requestAnimationFrame(tick);
 })();

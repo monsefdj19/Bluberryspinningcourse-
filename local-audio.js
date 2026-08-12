@@ -17,7 +17,7 @@
     });
     const seek=offset=>{
       const duration=Number(audio.duration),raw=Math.max(0,Number(offset)||0);
-      audio.currentTime=Number.isFinite(duration)&&duration>0?raw%duration:raw;
+      audio.currentTime=Number.isFinite(duration)&&duration>0?Math.min(raw,duration):raw;
     };
     const cancelFade=()=>{fadeToken++;fadingIn=false};
     const restoreVolume=()=>{boundaryRatio=1;audio.volume=baseVolume};
@@ -39,7 +39,7 @@
       if(!source){cancelFade();audio.pause();restoreVolume();state('missing');return false}
       try{
         const switching=Boolean(currentKey)&&key!==currentKey&&shouldPlay;
-        if(key!==currentKey){cancelFade();if(switching)audio.volume=0;audio.pause();currentKey=key;boundaryRatio=1;audio.volume=switching?0:baseVolume;audio.loop=true;audio.src=source.audioSrc;onCover(source.artworkSrc||null,source);audio.load();await metadata()}
+        if(key!==currentKey){cancelFade();if(switching)audio.volume=0;audio.pause();currentKey=key;boundaryRatio=1;audio.volume=switching?0:baseVolume;audio.loop=false;audio.src=source.audioSrc;onCover(source.artworkSrc||null,source);audio.load();await metadata()}
         if(request!==requestId)return false;
         seek(offset);
         if(shouldPlay)await audio.play();else audio.pause();
@@ -53,7 +53,7 @@
       const request=++requestId;
       const key=`${programId}:${index}`;
       if(key!==currentKey)return load(programId,index,offset,shouldPlay,request);
-      const duration=Number(audio.duration),target=Number.isFinite(duration)&&duration>0?Math.max(0,Number(offset)||0)%duration:Math.max(0,Number(offset)||0);
+      const duration=Number(audio.duration),target=Number.isFinite(duration)&&duration>0?Math.min(Math.max(0,Number(offset)||0),duration):Math.max(0,Number(offset)||0);
       if(Math.abs((Number(audio.currentTime)||0)-target)>1.5)audio.currentTime=target;
       try{if(shouldPlay&&audio.paused)await audio.play();else if(!shouldPlay&&!audio.paused)audio.pause();if(request!==requestId)return false;state(shouldPlay?'playing':'paused');return true}catch(error){if(request===requestId)state('error');return false}
     }

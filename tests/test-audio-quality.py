@@ -15,6 +15,8 @@ for file in files:
     probe=subprocess.run(['ffprobe','-v','error','-show_entries','format=duration:format_tags=title,artist','-of','json',str(file)],capture_output=True,text=True,check=True)
     format_data=json.loads(probe.stdout)['format'];duration=float(format_data['duration']);tags=format_data.get('tags',{})
     assert duration>=90, f'{file.name} is not a complete track ({duration:.1f}s)'
+    mapped_track=next(track for program in programs for track in program['tracks'] if root/track['audioSrc'].removeprefix('./')==file)
+    assert duration>=mapped_track['seconds']+3, f'{file.name} must finish at least three seconds after its exercise window; looping or dead air is not acceptable'
     if file.name=='02-01.mp3':
         assert duration>=194, f'{file.name} must cover the full 194-second block'
         assert tags.get('title')=='Best Day Of My Life' and tags.get('artist')=='American Authors', f'{file.name} is not the supplied Rolling Hills opener'
